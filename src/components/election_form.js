@@ -242,13 +242,13 @@ class election_form extends Component {
 
     render() {
         return (
-            <div className="container body">
+            <div className="container">
                 <div className="row">
 
 
                     {/* INFORMATIONS GÉNÉRALES */}
                     <div id="general_information"
-                         className="box_placeholder col-lg-offset-1 col-md-offset-1 col-md-5 col-sm-5 col-xs-12">
+                         className="col-xs-12 col-lg-6">
                         <div className="x_panel tile">
                             <div className="x_title">
                                 <h2>Information générales</h2>
@@ -318,7 +318,7 @@ class election_form extends Component {
                     </div>
 
                     {/* PROPOSITIONS */}
-                    <div id="proposition" className="box_placeholder col-md-5 col-sm-5 col-xs-12">
+                    <div id="proposition" className="col-xs-12 col-lg-6">
                         <div className="x_panel tile">
                             <div className="x_title">
                                 <h2>Propositions soumises au vote</h2>
