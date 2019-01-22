@@ -48,7 +48,7 @@ class Menu extends Component {
             <div >
                 <Navbar color="light" light expand="md">
                     <Container>
-                        <Link to={`/dashboard`} className="navbar-brand">
+                        <Link to={`/`} className="navbar-brand">
                             <img src="/brand.svg" alt="logo" height="32"/>
                         </Link>
                         <NavbarToggler onClick={this.toggle} />
