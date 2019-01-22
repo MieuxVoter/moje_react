@@ -1,9 +1,10 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './custom.css';
+//import './App.css';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
+//import './custom.css';
 
 import Dashboard from "./components/dashboard.js"
 import Help from "./components/help.js"
