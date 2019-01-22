@@ -57,19 +57,19 @@ class Menu extends Component {
                             {localStorage.getItem('username') ? (
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
-                                        <NavLink to={`/dashboard`} >Tableau de bord</NavLink>
+                                        <NavLink to={`/dashboard`} className="btn btn-link text-secondary" >Tableau de bord</NavLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavLink to={`/`} >Nouveau scrutin</NavLink>
+                                        <NavLink to={`/`} className="btn btn-link text-secondary" >Nouveau scrutin</NavLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavLink  onClick={this.user_disconnect} >Déconnexion</NavLink>
+                                        <NavLink  onClick={this.user_disconnect} className="btn btn-link text-secondary" >Déconnexion</NavLink>
                                     </NavItem>
                                 </Nav>
                             ) : (
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
-                                        <NavLink to={`/log-in`} ><i className="fas fa-user-circle mr-2"></i>Connexion</NavLink>
+                                        <NavLink to={`/log-in`} className="btn btn-link text-primary"><i className="fas fa-user-circle mr-2"></i>Connexion</NavLink>
                                     </NavItem>
                                 </Nav>
                             )}
