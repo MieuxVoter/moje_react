@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import {
     Collapse,
     Container,
@@ -9,7 +9,6 @@ import {
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink,
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
@@ -58,10 +57,10 @@ class Menu extends Component {
                             {localStorage.getItem('username') ? (
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
-                                        <NavLink href="/dashboard" >Tableau de bord</NavLink>
+                                        <NavLink to={`/dashboard`} >Tableau de bord</NavLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavLink href="/" >Nouveau scrutin</NavLink>
+                                        <NavLink to={`/`} >Nouveau scrutin</NavLink>
                                     </NavItem>
                                     <NavItem>
                                         <NavLink  onClick={this.user_disconnect} >Déconnexion</NavLink>
@@ -70,7 +69,7 @@ class Menu extends Component {
                             ) : (
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
-                                        <NavLink href="/log-in" ><i className="fas fa-user-circle mr-2"></i>Connexion</NavLink>
+                                        <NavLink to={`/log-in`} ><i className="fas fa-user-circle mr-2"></i>Connexion</NavLink>
                                     </NavItem>
                                 </Nav>
                             )}
