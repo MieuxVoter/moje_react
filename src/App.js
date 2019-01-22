@@ -2,9 +2,6 @@ import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 
 import './App.css';
-import '../node_modules/gentelella/vendors/bootstrap/dist/css/bootstrap.min.css';
-import '../node_modules/gentelella/vendors/font-awesome/css/font-awesome.min.css';
-import '../node_modules/gentelella/vendors/nprogress/nprogress.css';
 import './custom.css';
 
 import Dashboard from "./components/dashboard.js"
