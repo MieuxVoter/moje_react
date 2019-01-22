@@ -16,8 +16,9 @@ import {
     DropdownItem } from 'reactstrap';
 
 class Menu extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        this.toggle = this.toggle.bind(this);
         this.state = {
             candidates: [],
             candidateInputFieldId: 0,
@@ -27,13 +28,8 @@ class Menu extends Component {
             rateInputFields: [],
             voterInput: [],
             isOpen: false
-        }
-    }
 
-    user_disconnect() {
-        localStorage.removeItem('username');
-        localStorage.removeItem('password');
-        window.location.assign('/log-in');
+        }
     }
 
     toggle() {
@@ -42,9 +38,15 @@ class Menu extends Component {
         });
     }
 
+    user_disconnect() {
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+        window.location.assign('/log-in');
+    }
+
     render() {
         return (
-            <div className="mb-5">
+            <div >
                 <Navbar color="light" light expand="md">
                     <Container>
                         <Link to={`/dashboard`} className="navbar-brand">
@@ -80,7 +82,6 @@ class Menu extends Component {
             </div>
         );
     }
-
     renderBackup() {
         return (
             <div className="top_nav">
