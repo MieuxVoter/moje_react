@@ -6,6 +6,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
 import './styles.css';
 
+
+
 import Dashboard from "./components/dashboard.js"
 import Help from "./components/help.js"
 import ElectionForm from "./components/election_form.js"
@@ -30,7 +32,7 @@ class App extends React.Component {
                     </header>
                     <main className="pt-5">
                         <Router>
-                            <switch>
+                            <div>
                                 <Route path="/dashboard" component={Dashboard}/>
                                 <Route path="/log-in" component={Login}/>
                                 <Route path="/sign-up" component={Register}/>
@@ -42,7 +44,7 @@ class App extends React.Component {
                                 <Route path="/vote" component={VoterForm}/>
                                 <Route path="/election_result"   component={ElectionResult}/>
                                 <Route path="/help"   component={Help}/>
-                            </switch>
+                            </div>
                         </Router>
                     </main>
                     <footer>
