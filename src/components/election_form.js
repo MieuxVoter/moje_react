@@ -29,16 +29,16 @@ class election_form extends Component {
     init_election_date(id) {
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; //January is 0!
+        var mm = today.getMonth() + 1; //January is 0!
         var yyyy = today.getFullYear();
-        if(dd<10){
-            dd='0'+dd
+        if (dd < 10) {
+            dd = '0' + dd
         }
-        if(mm<10){
-            mm='0'+mm
+        if (mm < 10) {
+            mm = '0' + mm
         }
 
-        today = yyyy+'-'+mm+'-'+dd;
+        today = yyyy + '-' + mm + '-' + dd;
         document.getElementById(id).setAttribute("value", today);
         document.getElementById(id).setAttribute("min", today);
     }
@@ -243,6 +243,124 @@ class election_form extends Component {
     render() {
         return (
             <div className="container">
+
+                <div className="row">
+                    <div className="col-12">
+                        <h1>Nouveau Scrutin</h1>
+                        <hr/>
+
+                    </div>
+                </div>
+
+                <div className="row mt-3">
+                    <div className="col-12">
+                        <label htmlFor="author"><b>Titre du scrutin</b> <span
+                            className="text-muted">(obligatoire)</span></label>
+                        <input type="text" name="name" id="ballot-name"
+                               required="required" className="form-control" maxLength="250"
+                               value="" placeholder="Titre"/>
+                    </div>
+                </div>
+
+                <div className="row mt-5">
+                    <div className="col-12">
+                        <label htmlFor="author"><b>Description du scrutin</b> <span
+                            className="text-muted">(obligatoire)</span></label>
+                        <textarea name="note" id="ballot-note"
+                                  required="required" className="form-control" maxLength="500"
+                                  value="" placeholder="Description" rows="5"/>
+
+                    </div>
+                </div>
+
+                <div className="row mt-5">
+                    <div className="col-12">
+                        <b>Options du scrutin</b>
+                    </div>
+                </div>
+
+                <div className="row mb-3 mt-3">
+                    <div className="col-auto">
+                        <label className="switch">
+                            <input type="checkbox" id="toggle-end-date-time" name="toggle-end-date-time"
+                                   onClick={evt => this.toggleEndDateTime(evt)}/>
+                            <span className="slider round"></span>
+                        </label>
+                    </div>
+                    <div className="col-8">
+                        <label id="toggle-end-date-time-label" className="pl-2">Programmer la date de fin de
+                            l'élection.</label>
+                        <input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>
+                    </div>
+                </div>
+
+                <div className="row  mb-3 mt-3">
+                    <div className="col-auto">
+                        <label className="switch">
+                            <input type="checkbox" id="anonymous" name="anonymous"/>
+                            <span className="slider round"></span>
+                        </label>
+                    </div>
+                    <div className="col-8">
+                        <label id="anonymous_label" className="pl-2">Autoriser l’utilisation des votes anonymisés à
+                            des
+                            buts de recherche.</label>
+
+                    </div>
+                </div>
+
+                <div className="row mt-5">
+                    <div className="col-12">
+                        <b>Propositions soumises au vote</b>
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col-12">
+                        <ul className="collection">
+
+                            {this.state.candidateInputFields.length === 0 &&
+                            <li>
+                                <div className="x_panel tile overflow_hidden">
+                                    <div className="x_title">
+                                        <h2>Aucune proposition</h2>
+                                    </div>
+                                </div>
+                            </li>
+                            }
+                            {this.state.candidateInputFields.map((value) => {
+                                return value
+                            })}
+                        </ul>
+                        <form className="form-horizontal">
+                            <div className="form-group">
+                                <div className="col-lg-12">
+                                    <input type="text" id="proposition_input" name="candidate"
+                                           className="form-control col-lg-12"
+                                           required="required"/>
+                                    <label>Nouvelle proposition</label>
+                                </div>
+                            </div>
+
+                            <div className="col-md-12 text-center">
+                                <button type="button" className="btn btn-primary btn-lg"
+                                        onClick={evt => this.addCandidateInput(evt)}>+
+                                    AJOUTER
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+
+        )
+    }
+
+    renderBackup() {
+        return (
+            <div className="container">
                 <div className="row">
 
 
@@ -293,9 +411,12 @@ class election_form extends Component {
                                 {/* Election end date */}
                                 <div className="form-group">
                                     <div className="col-lg-12 anonymous">
-                                        <input type="checkbox" id="toggle-end-date-time" name="toggle-end-date-time" onClick={evt => this.toggleEndDateTime(evt)}/>
-                                        <label id="toggle-end-date-time-label">Programmer la date de fin de l'élection.</label>
-                                        <input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>
+                                        <input type="checkbox" id="toggle-end-date-time" name="toggle-end-date-time"
+                                               onClick={evt => this.toggleEndDateTime(evt)}/>
+                                        <label id="toggle-end-date-time-label">Programmer la date de fin de
+                                            l'élection.</label>
+                                        <input type="date" id="end_election_date" max="2100-06-25"
+                                               name="end_date_election"/>
 
                                     </div>
                                 </div>

@@ -45,7 +45,7 @@ class Menu extends Component {
 
     render() {
         return (
-            <div className="mb-5">
+            <div >
                 <Navbar color="light" light expand="md">
                     <Container>
                         <Link to={`/`} className="navbar-brand">

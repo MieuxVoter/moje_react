@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Route} from "react-router-dom";
 //import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
-//import './custom.css';
+import './styles.css';
 
 import Dashboard from "./components/dashboard.js"
 import Help from "./components/help.js"
@@ -24,22 +24,32 @@ class App extends React.Component {
 
     render() {
         return (
-            <Router>
                 <div>
-                    <Menu/>
-                    <Route path="/dashboard" component={Dashboard}/>
-                    <Route path="/log-in" component={Login}/>
-                    <Route path="/sign-up" component={Register}/>
-                    <Route path="/reset_password" component={ResetPassword}/>
-                    <Route path="/new_password" component={NewPassword}/>
-                    <Route exact path="/" component={ElectionForm}/>
-                    <Route path="/election_detail" component={ElectionDetail}/>
-                    <Route path="/election_finalize" component={ElectionVoterForm}/>
-                    <Route path="/vote" component={VoterForm}/>
-                    <Route path="/election_result"   component={ElectionResult}/>
-                    <Route path="/help"   component={Help}/>
+                    <header>
+                        <Menu/>
+                    </header>
+                    <main className="pt-5">
+                        <Router>
+                            <switch>
+                                <Route path="/dashboard" component={Dashboard}/>
+                                <Route path="/log-in" component={Login}/>
+                                <Route path="/sign-up" component={Register}/>
+                                <Route path="/reset_password" component={ResetPassword}/>
+                                <Route path="/new_password" component={NewPassword}/>
+                                <Route exact path="/" component={ElectionForm}/>
+                                <Route path="/election_detail" component={ElectionDetail}/>
+                                <Route path="/election_finalize" component={ElectionVoterForm}/>
+                                <Route path="/vote" component={VoterForm}/>
+                                <Route path="/election_result"   component={ElectionResult}/>
+                                <Route path="/help"   component={Help}/>
+                            </switch>
+                        </Router>
+                    </main>
+                    <footer>
+                        <p className="mt-5 text-center"><small>Application MieuxVoter, 2019</small></p>
+                    </footer>
                 </div>
-            </Router>
+
         )
     }
     ;
