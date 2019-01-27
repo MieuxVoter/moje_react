@@ -6,6 +6,8 @@ class CheckboxSwitch extends Component {
         super(props);
     }
 
+    toggleHasDateEnd
+
     render() {
         return (
             <label className="switch">

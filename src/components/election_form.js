@@ -10,6 +10,7 @@ class election_form extends Component {
     constructor(props) {
         super(props);
         this.toggleAddCandidate = this.toggleAddCandidate.bind(this);
+        this.toggleHasDateEnd = this.toggleHasDateEnd.bind(this);
         this.is_authenticated();
         this.state = {
             candidates: [],
@@ -27,7 +28,8 @@ class election_form extends Component {
             voterInput: [],
             electionId: null,
             electionCreationProgress: false,
-            isAddCandidateOpen: false
+            isAddCandidateOpen: false,
+            hasDateEnd:false,
         };
         this.initRateInput();
 
@@ -127,6 +129,12 @@ class election_form extends Component {
         });
     }
 
+    toggleHasDateEnd() {
+        this.setState({
+            hasDateEnd: !this.state.hasDateEnd
+        });
+    }
+
     addCandidateInput = () => {
         let candidateInputFields = this.state.candidateInputFields;
         let candidateInputFieldId = this.state.candidateInputFieldId + 1;
@@ -143,10 +151,9 @@ class election_form extends Component {
                 <input type="text" readOnly className="form-control" value={proposition_value} aria-label="Amount (to the nearest dollar)" />
                 <div className="input-group-append">
                     <button className="btn btn-outline-primary" type="button"><i className="fa fa-edit" /></button>
-                    <button className="btn btn-outline-danger" type="button"><i className="fas fa-trash-alt" /></button>
+                    <button className="btn btn-outline-danger" type="button"><i className="fas fa-trash-alt"  /></button>
                 </div>
             </div>);
-
 
         /*<div id={["li_candidate_" + candidateInputFieldId].join()} key={candidateInputFieldId}>
                 <div className="x_panel tile overflow_hidden">
@@ -309,12 +316,16 @@ class election_form extends Component {
 
                 <div className="row mb-3 mt-3">
                     <div className="col-auto">
-                        <CheckboxSwitch id="toggle-end-date-time" name="toggle-end-date-time" onClick={evt => this.toggleEndDateTime(evt)} />
+                        <CheckboxSwitch id="toggle-end-date-time" name="toggle-end-date-time" onClick={this.toggleHasDateEnd} />
                     </div>
                     <div className="col-8">
                         <label id="toggle-end-date-time-label" className="pl-2">Programmer la date de fin de
                             l'élection.</label>
-                        <input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>
+                        <div>
+                            <Collapse isOpen={this.state.hasDateEnd}>
+                                <input type="date" id="end_election_date" max="2100-06-25" name="end_date_election" />
+                            </Collapse>
+                        </div>
                     </div>
                 </div>
 
