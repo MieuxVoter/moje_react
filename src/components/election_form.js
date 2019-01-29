@@ -1,17 +1,13 @@
 import React, {Component} from "react";
 import config from 'react-global-configuration';
-import {Collapse} from 'reactstrap';
-import Card from "reactstrap/es/Card";
-import CardBody from "reactstrap/es/CardBody";
-import CardHeader from "reactstrap/es/CardHeader";
+import {Collapse,Card,CardBody,CardHeader,Button,Input,Label} from 'reactstrap';
 import CheckboxSwitch from "./CheckboxSwitch";
 
 class election_form extends Component {
     constructor(props) {
         super(props);
-        this.toggleAddCandidate = this.toggleAddCandidate.bind(this);
-        this.toggleHasDateEnd = this.toggleHasDateEnd.bind(this);
         this.is_authenticated();
+        this._propositionLabelInput = React.createRef();
         this.state = {
             candidates: [],
             candidateInputFieldId: 0,
@@ -29,7 +25,7 @@ class election_form extends Component {
             electionId: null,
             electionCreationProgress: false,
             isAddCandidateOpen: false,
-            hasDateEnd:false,
+            hasDateEnd:false
         };
         this.initRateInput();
 
@@ -123,13 +119,16 @@ class election_form extends Component {
             });
     }
 
-    toggleAddCandidate() {
+    toggleAddCandidate= () => {
         this.setState({
             isAddCandidateOpen: !this.state.isAddCandidateOpen
         });
+
     }
 
-    toggleHasDateEnd() {
+
+
+    toggleHasDateEnd= () => {
         this.setState({
             hasDateEnd: !this.state.hasDateEnd
         });
@@ -138,20 +137,20 @@ class election_form extends Component {
     addCandidateInput = () => {
         let candidateInputFields = this.state.candidateInputFields;
         let candidateInputFieldId = this.state.candidateInputFieldId + 1;
-        let proposition_value = document.getElementById('proposition_input').value;
-        document.getElementById('proposition_input').value = '';
+        let proposition_value = document.getElementById('proposition_Input').value;
+        document.getElementById('proposition_Input').value = '';
         this.state.candidates.push({id: candidateInputFieldId, value: proposition_value});
         let candidatesJson = this.state.candidates;
         localStorage.setItem('candidates', JSON.stringify(candidatesJson));
         candidateInputFields.push(
-            <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text">{candidateInputFieldId}</span>
+            <div className="Input-group mb-3">
+                <div className="Input-group-prepend">
+                    <span className="Input-group-text">{candidateInputFieldId}</span>
                 </div>
-                <input type="text" readOnly className="form-control" value={proposition_value} aria-label="Amount (to the nearest dollar)" />
-                <div className="input-group-append">
-                    <button className="btn btn-outline-primary" type="button"><i className="fa fa-edit" /></button>
-                    <button className="btn btn-outline-danger" type="button"><i className="fas fa-trash-alt"  /></button>
+                <Input type="text" readOnly className="form-control" value={proposition_value} aria-label="Amount (to the nearest dollar)" />
+                <div className="Input-group-append">
+                    <Button className="btn btn-outline-primary" type="button"><i className="fa fa-edit" /></Button>
+                    <Button className="btn btn-outline-danger" type="button"><i className="fas fa-trash-alt"  /></Button>
                 </div>
             </div>);
 
@@ -212,8 +211,8 @@ class election_form extends Component {
     addRateInput = () => {
         let rateInputFields = this.state.rateInputFields;
         let rateInputFieldId = this.state.rateInputFieldId + 1;
-        let rate_value = document.getElementById('rate_input').value;
-        document.getElementById('rate_input').value = '';
+        let rate_value = document.getElementById('rate_Input').value;
+        document.getElementById('rate_Input').value = '';
 
         this.state.rates.push({id: rateInputFieldId, value: rate_value});
         let ratesJson = this.state.rates;
@@ -275,6 +274,11 @@ class election_form extends Component {
         }
     }
 
+    setFocusOnPropositionLabelInput = () => {
+        this._propositionLabelInput.current.focus();
+    };
+
+
     render() {
         return (
             <div className="container">
@@ -291,8 +295,8 @@ class election_form extends Component {
                     <div className="col-12">
                         <label htmlFor="author"><b>Titre du scrutin</b> <span
                             className="text-muted">(obligatoire)</span></label>
-                        <input type="text" name="name" id="ballot-name"
-                               required="required" className="form-control" maxLength="250"
+                        <Input type="text" name="name" id="ballot-name"
+                               required="required" className="form-control" maxLength="250" autoFocus tabIndex="1"
                                 placeholder="Titre" />
                     </div>
                 </div>
@@ -302,7 +306,7 @@ class election_form extends Component {
                         <label htmlFor="author"><b>Description du scrutin</b> <span
                             className="text-muted">(obligatoire)</span></label>
                         <textarea name="note" id="ballot-note"
-                                  required="required" className="form-control" maxLength="500"
+                                  required="required" className="form-control" maxLength="500" tabIndex="2"
                                    placeholder="Description" rows="5"/>
 
                     </div>
@@ -323,7 +327,7 @@ class election_form extends Component {
                             l'élection.</label>
                         <div>
                             <Collapse isOpen={this.state.hasDateEnd}>
-                                <input type="date" id="end_election_date" max="2100-06-25" name="end_date_election" />
+                                <Input type="date" id="end_election_date" max="2100-06-25" name="end_date_election" />
                             </Collapse>
                         </div>
                     </div>
@@ -352,9 +356,6 @@ class election_form extends Component {
                 <div className="row mt-2">
                     <div className="col-12">
                         <div className="collection">
-                            {this.state.candidateInputFields.length === 0 && null
-
-                            }
                             {this.state.candidateInputFields.map((value) => {
                                 return value
                             })}
@@ -364,7 +365,7 @@ class election_form extends Component {
                 <div className="row mt-2">
 
                     <div className="col-12">
-                        <Collapse isOpen={this.state.isAddCandidateOpen}>
+                        <Collapse isOpen={this.state.isAddCandidateOpen} onEntered={this.setFocusOnPropositionLabelInput}>
 
                             <form>
                                 <Card>
@@ -372,23 +373,21 @@ class election_form extends Component {
                                     <CardBody>
                                         <div className="row">
                                             <div className="col-12">
-                                                <label htmlFor="author"><b>Libellé</b> <span
-                                                    className="text-muted">(obligatoire)</span></label>
-                                                <input type="text" name="candidate" id="proposition_input"
-                                                       required="required" className="form-control" maxLength="250"
-                                                       placeholder="Nom de la proposition, nom du candidat, etc..."/>
+                                                <Label for="proposition_label"><b>Libellé</b><span className="text-muted">(obligatoire)</span></Label>
+                                                <Input type="text" name="proposition_label" id="proposition_label" innerRef={this._propositionLabelInput} placeholder="Nom de la proposition, nom du candidat, etc..."/>
+
                                             </div>
                                         </div>
                                         <div className="row mt-2">
                                             <div className="col-md-12 text-right">
-                                                <button type="button" className="btn btn-secondary mr-2"
+                                                <Button type="button" className="btn btn-secondary mr-2"
                                                         onClick={this.toggleAddCandidate}>
                                                     <i className="fas fa-times mr-2" />Annuler
-                                                </button>
-                                                <button type="button" className="btn btn-success "
+                                                </Button>
+                                                <Button type="submit" className="btn btn-success "
                                                         onClick={evt => this.addCandidateInput(evt)}>
                                                     <i className="fas fa-plus mr-2" />Ajouter
-                                                </button>
+                                                </Button>
                                             </div>
                                         </div>
                                     </CardBody>
@@ -399,8 +398,8 @@ class election_form extends Component {
                     </div>
 
                     <div className="col-12">
-                        {this.state.isAddCandidateOpen? null : <button  className="btn btn-primary" name="collapseAddCandidate" id="collapseAddCandidate" onClick={this.toggleAddCandidate}>
-                            <i className="fas fa-plus-square mr-2" />Ajouter une proposition</button>}
+                        {this.state.isAddCandidateOpen? null : <Button  className="btn btn-primary" tabIndex="3" name="collapseAddCandidate" id="collapseAddCandidate" onClick={this.toggleAddCandidate}>
+                            <i className="fas fa-plus-square mr-2" />Ajouter une proposition</Button>}
 
                     </div>
 
@@ -411,9 +410,9 @@ class election_form extends Component {
                     <div className="col-12 text-right">
                         <hr />
 
-                                <button type="button" className="btn btn-success btn-lg"
+                                <Button type="button" className="btn btn-success btn-lg"
                                         onClick={evt => this.setBallotInformation(evt)}><i className="fas fa-check mr-2"/>Démarrer <span className="d-none d-md-inline">ce scrutin</span>
-                                </button>
+                                </Button>
 
                     </div>
                 </div>
@@ -447,7 +446,7 @@ class election_form extends Component {
                                 {/* Ballot name */}
                                 <div className="form-group">
                                     <div className="col-lg-12">
-                                        <input type="text" name="name" id="ballot-name"
+                                        <Input type="text" name="name" id="ballot-name"
                                                required="required"
                                                className="form-control col-md-7 col-xs-12"/>
                                         <label>Titre du scrutin*</label>
@@ -457,7 +456,7 @@ class election_form extends Component {
                                 {/* Ballot description */}
                                 <div className="form-group">
                                     <div className="col-lg-12">
-                                        <input type="text" name="note" id="ballot-note"
+                                        <Input type="text" name="note" id="ballot-note"
                                                required="required"
                                                className="form-control col-md-7 col-xs-12"/>
                                         <label>Description du scrutin*</label>
@@ -467,9 +466,9 @@ class election_form extends Component {
                                 {/* Election start date */}
                                 {/*<div className="form-group">
                                     <div className="col-lg-12 anonymous">
-                                        <input type="checkbox" id="toggle-start-date-time" name="toggle-start-date-time" onClick={evt => this.toggleStartDateTime(evt)}/>
+                                        <Input type="checkbox" id="toggle-start-date-time" name="toggle-start-date-time" onClick={evt => this.toggleStartDateTime(evt)}/>
                                         <label id="toggle-start-date-time-label">Programmer la date de début de l'élection.</label>
-                                        <input type="date" id="start_election_date" max="2100-06-25" name="start_date_election"/>
+                                        <Input type="date" id="start_election_date" max="2100-06-25" name="start_date_election"/>
 
                                     </div>
                                 </div>*/}
@@ -477,11 +476,11 @@ class election_form extends Component {
                                 {/* Election end date */}
                                 <div className="form-group">
                                     <div className="col-lg-12 anonymous">
-                                        <input type="checkbox" id="toggle-end-date-time" name="toggle-end-date-time"
+                                        <Input type="checkbox" id="toggle-end-date-time" name="toggle-end-date-time"
                                                onClick={evt => this.toggleEndDateTime(evt)}/>
                                         <label id="toggle-end-date-time-label">Programmer la date de fin de
                                             l'élection.</label>
-                                        <input type="date" id="end_election_date" max="2100-06-25"
+                                        <Input type="date" id="end_election_date" max="2100-06-25"
                                                name="end_date_election"/>
 
                                     </div>
@@ -490,7 +489,7 @@ class election_form extends Component {
                                 {/* Allow store ballot*/}
                                 <div className="form-group">
                                     <div className="col-lg-12 anonymous">
-                                        <input type="checkbox" id="anonymous" name="anonymous"/>
+                                        <Input type="checkbox" id="anonymous" name="anonymous"/>
                                         <label id="anonymous_label">Autoriser l’utilisation des votes anonymisés à des
                                             buts de recherche.</label>
 
@@ -530,7 +529,7 @@ class election_form extends Component {
                             <form className="form-horizontal">
                                 <div className="form-group">
                                     <div className="col-lg-12">
-                                        <input type="text" id="proposition_input" name="candidate"
+                                        <Input type="text" id="proposition_Input" name="candidate"
                                                className="form-control col-lg-12"
                                                required="required"/>
                                         <label>Nouvelle proposition</label>
@@ -538,10 +537,10 @@ class election_form extends Component {
                                 </div>
 
                                 <div className="col-md-12 text-center">
-                                    <button type="button" className="btn btn-default btn-lg"
+                                    <Button type="button" className="btn btn-default btn-lg"
                                             onClick={evt => this.addCandidateInput(evt)}>+
                                         AJOUTER
-                                    </button>
+                                    </Button>
                                 </div>
                             </form>
                         </div>
@@ -552,9 +551,9 @@ class election_form extends Component {
 
                     <div className="col-md-12 text-center">
 
-                        <button type="button" className="btn btn-primary btn-lg"
+                        <Button type="button" className="btn btn-primary btn-lg"
                                 onClick={evt => this.setBallotInformation(evt)}>Valider
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
