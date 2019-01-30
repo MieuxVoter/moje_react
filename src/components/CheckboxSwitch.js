@@ -1,17 +1,33 @@
 import React, {Component} from "react";
+import ReactDOM from "react-dom";
 
 
 class CheckboxSwitch extends Component {
     constructor(props) {
         super(props);
+        this.state={
+            focused:false
+        }
+
+
+
     }
 
-    toggleHasDateEnd
 
     render() {
+
         return (
-            <label className="switch">
-                <input type="checkbox" id={this.props.id} name={this.props.name} onClick={this.props.onClick} className={this.props.className}/>
+            <label className={this.state.focused?"focused switch":"switch"} >
+                <input
+                    type="checkbox"
+                    id={this.props.id}
+                    onFocus={() => this.setState({ focused: true })}
+                    onBlur={() => this.setState({ focused: false })}
+                    name={this.props.name}
+                    tabIndex={this.props.tabIndex}
+                    onClick={this.props.onClick}
+                    className={this.props.className}
+                />
                 <span className="slider round" />
             </label>
         );

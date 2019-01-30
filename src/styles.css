@@ -27,6 +27,13 @@ textarea{
     height: 34px;
 }
 
+.switch.focused > .slider.round{
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow:0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+
 /* Hide default HTML checkbox */
 .switch input {
     opacity: 0;
