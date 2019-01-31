@@ -1,8 +1,11 @@
 import React, {Component} from "react";
 import config from 'react-global-configuration';
-import {Collapse, Card, CardBody, CardHeader} from 'reactstrap';
+import {Collapse, Card, CardBody, CardHeader, Alert} from 'reactstrap';
 import CheckboxSwitch from "./CheckboxSwitch";
 import ModalConfirm from "./ModalConfirm";
+import DatePicker from 'react-datepicker';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 class election_form extends Component {
 
@@ -29,8 +32,10 @@ class election_form extends Component {
             electionId: null,
             electionCreationProgress: false,
             isAddCandidateOpen: false,
-            hasDateEnd: false,
-            hasDateStart: false
+            hasEndDate: false,
+            endDate : Date.now(),
+            hasStartDate: false,
+            startDate: Date.now()
         };
         this.initRateInput();
 
@@ -252,25 +257,27 @@ class election_form extends Component {
 
     };
 
-    toggleHasDateEnd = () => {
+    toggleHasEndDate = () => {
         this.setState({
-            hasDateEnd: !this.state.hasDateEnd
+            hasEndDate: !this.state.hasEndDate
         });
     };
 
-    toggleHasDateStart = () => {
+    toggleHasStartDate = () => {
         this.setState({
-            hasDateStart: !this.state.hasDateStart
+            hasStartDate: !this.state.hasStartDate
         });
     };
 
     setFocusOnPropositionLabelInput = () => {
         this._propositionLabelInput.current.focus();
-    }
+    };
 
     setFocusOnAddPropositionButton = () => {
         this._addPropositionButton.current.focus();
     };
+
+
 
     render() {
         return (
@@ -311,13 +318,21 @@ class election_form extends Component {
                 <div className="row mb-3 mt-3">
                     <div className="col-auto">
                         <CheckboxSwitch id="toggle-end-date-time" name="toggle-end-date-time" tabIndex="3"
-                                        onClick={this.toggleHasDateStart}/>
+                                        onClick={this.toggleHasStartDate}/>
                     </div>
-                    <div className="col-8">
+                    <div className="col">
                         <label id="toggle-end-date-time-label" className="pl-2">Programmer une date de début</label>
                         <div>
-                            <Collapse isOpen={this.state.hasDateStart}>
-                                <input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>
+                            <Collapse isOpen={this.state.hasStartDate}>
+
+                                    <Alert color="secondary" >
+
+                                    {/*<input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>*/}
+                                    <span><b>Date de début :</b></span> <DatePicker id="start_election_date" name="start_date_election" className="ml-2"
+                                                selected={this.state.startDate}
+                                                onChange={(date) => {  this.setState({ startDate:date })  }}
+
+                                    /></Alert>
                             </Collapse>
                         </div>
                     </div>
@@ -326,13 +341,18 @@ class election_form extends Component {
                 <div className="row mb-3 mt-3">
                     <div className="col-auto">
                         <CheckboxSwitch id="toggle-end-date-time" name="toggle-end-date-time" tabIndex="4"
-                                        onClick={this.toggleHasDateEnd}/>
+                                        onClick={this.toggleHasEndDate}/>
                     </div>
-                    <div className="col-8">
+                    <div className="col">
                         <label id="toggle-end-date-time-label" className="pl-2">Programmer une date de fin</label>
                         <div>
-                            <Collapse isOpen={this.state.hasDateEnd}>
-                                <input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>
+                            <Collapse isOpen={this.state.hasEndDate}>
+                                <Alert color="secondary" >
+                                    <span><b>Date de fin :</b></span>  <DatePicker id="end_election_date" name="end_date_election" className="ml-2"
+                                            selected={this.state.endDate}
+                                            onChange={(date) => {  this.setState({ endDate:date })  }}
+
+                                /></Alert>
                             </Collapse>
                         </div>
                     </div>
