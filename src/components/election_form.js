@@ -144,10 +144,9 @@ class election_form extends Component {
                     <div className="input-group-prepend">
                         <span className="input-group-text">{propositionsFieldId}</span>
                     </div>
-                    <input type="text" readOnly className="form-control" value={propositionFieldValue}
+                    <input type="text"  className="form-control" value={propositionFieldValue}
                            aria-label="Amount (to the nearest dollar)"/>
                     <div className="input-group-append">
-                        <button className="btn btn-outline-primary" type="button"><i className="fa fa-edit"/></button>
 
                         <button className="btn btn-outline-danger" type="button" onClick={() => {
                             this._removePropositionModalConfirm.current.toggle()
