@@ -312,65 +312,6 @@ class election_form extends Component {
 
                 <div className="row mt-5">
                     <div className="col-12">
-                        <b>Options du scrutin</b>
-                    </div>
-                </div>
-                <div className="row mb-3 mt-3">
-                    <div className="col-auto">
-                        <CheckboxSwitch id="toggle-end-date-time" name="toggle-end-date-time" tabIndex="3"
-                                        onClick={this.toggleHasStartDate}/>
-                    </div>
-                    <div className="col">
-                        <label id="toggle-end-date-time-label" className="pl-2">Programmer une date de début</label>
-                        <div>
-                            <Collapse isOpen={this.state.hasStartDate}>
-
-                                    <Alert color="secondary" >
-
-                                    {/*<input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>*/}
-                                    <span><b>Date de début :</b></span> <DatePicker id="start_election_date" name="start_date_election" className="ml-2"
-                                                selected={this.state.startDate}
-                                                onChange={(date) => {  this.setState({ startDate:date })  }}
-
-                                    /></Alert>
-                            </Collapse>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row mb-3 mt-3">
-                    <div className="col-auto">
-                        <CheckboxSwitch id="toggle-end-date-time" name="toggle-end-date-time" tabIndex="4"
-                                        onClick={this.toggleHasEndDate}/>
-                    </div>
-                    <div className="col">
-                        <label id="toggle-end-date-time-label" className="pl-2">Programmer une date de fin</label>
-                        <div>
-                            <Collapse isOpen={this.state.hasEndDate}>
-                                <Alert color="secondary" >
-                                    <span><b>Date de fin :</b></span>  <DatePicker id="end_election_date" name="end_date_election" className="ml-2"
-                                            selected={this.state.endDate}
-                                            onChange={(date) => {  this.setState({ endDate:date })  }}
-
-                                /></Alert>
-                            </Collapse>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row  mb-3 mt-3">
-                    <div className="col-auto">
-                        <CheckboxSwitch id="anonymous" name="anonymous" tabIndex="5"/>
-                    </div>
-                    <div className="col-8">
-                        <label id="anonymous_label" className="pl-2">Autoriser l’utilisation des votes anonymisés à
-                            des
-                            buts de recherche.</label>
-                    </div>
-                </div>
-
-                <div className="row mt-5">
-                    <div className="col-12">
                         <b>{this.state.propositionsFields.length}
                             {(this.state.propositionsFields.length < 2) ? <span> Proposition soumise </span> :
                                 <span> Propositions soumises </span>}
@@ -433,7 +374,7 @@ class election_form extends Component {
 
                     <div className="col-12">
                         {this.state.isAddCandidateOpen ? null :
-                            <button className="btn btn-primary" tabIndex="6" ref={this._addPropositionButton}
+                            <button className="btn btn-primary" tabIndex="3" ref={this._addPropositionButton}
                                     name="collapseAddCandidate"
                                     id="collapseAddCandidate" onClick={this.toggleAddCandidate}>
                                 <i className="fas fa-plus-square mr-2"/>Ajouter une proposition</button>}
@@ -441,6 +382,82 @@ class election_form extends Component {
                     </div>
 
                 </div>
+
+
+
+
+                <div className="row mt-5">
+                    <div className="col-12">
+                        <b>Options du scrutin</b>
+                    </div>
+                </div>
+
+                <div className="row  mb-3 mt-3">
+                    <div className="col-auto">
+                        <CheckboxSwitch id="allowed_sending_anonymous_data" name="allowed_sending_anonymous_data" />
+                    </div>
+                    <div className="col-8">
+                        <label htmlFor="allowed_sending_anonymous_data" className="pl-2">Autoriser l’utilisation des votes anonymisés à
+                            des
+                            buts de recherche.</label>
+                    </div>
+                </div>
+
+                <div className="row mb-3 mt-3">
+                    <div className="col-auto">
+                        <CheckboxSwitch id="has_start_date" name="has_start_date"
+                                        onClick={this.toggleHasStartDate}/>
+                    </div>
+                    <div className="col">
+                        <label htmlFor="has_start_date" className="pl-2">Programmer une date de début</label>
+                        <div>
+                            <Collapse isOpen={this.state.hasStartDate}>
+
+                                <Alert color="secondary" >
+
+                                    {/*<input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>*/}
+                                    <span><b>Date de début :</b></span> <DatePicker id="start_election_date" name="start_date_election" className="ml-2"
+                                                                                    selected={this.state.startDate}
+                                                                                    onChange={(date) => {  this.setState({ startDate:date })  }}
+
+                                /></Alert>
+                            </Collapse>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row mb-3 mt-3">
+                    <div className="col-auto">
+                        <CheckboxSwitch id="has_end_date" name="has_end_date"
+                                        onClick={this.toggleHasEndDate}/>
+                    </div>
+                    <div className="col">
+                        <label htmlFor="has_end_date" className="pl-2">Programmer une date de fin</label>
+                        <div>
+                            <Collapse isOpen={this.state.hasEndDate}>
+                                <Alert color="secondary" >
+                                    <span><b>Date de fin :</b></span>  <DatePicker id="end_election_date" name="end_date_election" className="ml-2"
+                                                                                   selected={this.state.endDate}
+                                                                                   onChange={(date) => {  this.setState({ endDate:date })  }}
+
+                                /></Alert>
+                            </Collapse>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div className="row  mb-3 mt-3">
+                    <div className="col-auto">
+                        <CheckboxSwitch id="has_custom_mentions" name="has_custom_mentions"/>
+                    </div>
+                    <div className="col-8">
+                        <label htmlFor="has_custom_mentions" className="pl-2">Personnaliser les mentions</label>
+                    </div>
+                </div>
+
+
+
 
                 <div className="row mt-5">
 
