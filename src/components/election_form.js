@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import config from 'react-global-configuration';
 import {Collapse, Card, CardBody, CardHeader, Alert} from 'reactstrap';
-import CheckboxSwitch from "./CheckboxSwitch";
-import ModalConfirm from "./ModalConfirm";
+import CheckboxSwitch from "./formComponents/CheckboxSwitch";
+import ButtonWithConfirm from "./formComponents/ButtonWithConfirm";
 import DatePicker from 'react-datepicker';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,13 +12,12 @@ class election_form extends Component {
     constructor(props) {
         super(props);
         this.is_authenticated();
-        this._propositionLabelInput = React.createRef();
-        this._addPropositionButton = React.createRef();
+        this._candidateLabelInput = React.createRef();
+        this._addCandidateButton = React.createRef();
         this._removePropositionModalConfirm = React.createRef();
         this.state = {
             candidates: [],
-            propositionsFieldId: 0,
-            propositionsFields: [],
+            candidatesFieldId: 0,         
             rates: [
                 {"id": 1, "value": "Excellent"},
                 {"id": 2, "value": "Bien"},
@@ -134,37 +133,20 @@ class election_form extends Component {
         alert('ok');
     };
 
-    addCandidateInput = (evt) => {
+    addCandidate = (evt) => {
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
-            let propositionsFields = this.state.propositionsFields;
-            let propositionsFieldId = this.state.propositionsFieldId + 1;
-            let propositionFieldValue = this._propositionLabelInput.current.value;
-            let key = "propositionDiv" + propositionsFieldId;
-            this._propositionLabelInput.current.value = '';
-            this.state.candidates.push({id: propositionsFieldId, value: propositionFieldValue});
-            let candidatesJson = this.state.candidates;
-            localStorage.setItem('candidates', JSON.stringify(candidatesJson));
-            propositionsFields.push(<div key={key}>
-                <div className="input-group mb-3">
-                    <div className="input-group-prepend">
-                        <span className="input-group-text">{propositionsFieldId}</span>
-                    </div>
-                    <input type="text"  className="form-control" value={propositionFieldValue}
-                           aria-label="Amount (to the nearest dollar)"/>
-                    <div className="input-group-append">
 
-                        <button className="btn btn-outline-danger" type="button" onClick={() => {
-                            this._removePropositionModalConfirm.current.toggle()
-                        }}><i className="fas fa-trash-alt"/></button>
-                        <ModalConfirm title="Confirmation" confirmButtonText="Ok" confirmCallback={this.monTest}
-                                      cancelButtonText="Annuler" ref={this._removePropositionModalConfirm}>Êtes-vous sûr
-                            de vouloir supprimer cette proposition ?</ModalConfirm>
-                    </div>
-                </div>
-            </div>);
-            this.setState({propositionsFields});
-            this.setState({propositionsFieldId});
-            this.setState({isAddCandidateOpen: false});
+            let candidatesFieldId = this.state.candidatesFieldId + 1;
+            let candidateFieldValue = this._candidateLabelInput.current.value;
+            let key = "propositionDiv" + candidatesFieldId;
+            let candidatesJson = this.state.candidates;
+
+            candidatesJson.push({id: candidatesFieldId, value: candidateFieldValue, key: key});
+
+            this._candidateLabelInput.current.value = '';
+
+            this.setState({candidatesFieldId:candidatesFieldId,isAddCandidateOpen: false,candidates:candidatesJson});
+
         }
 
     };
@@ -231,9 +213,7 @@ class election_form extends Component {
         this.setState({rateInputFieldId})
     };
 
-    removeCandidateInput = (id) => {
-        let elem = document.getElementById('li_candidate_' + id);
-        elem.parentNode.removeChild(elem);
+    removeCandidate = (id) => {
         let data = this.state.candidates.filter(i => i.id !== id);
         this.setState({candidates: data});
     };
@@ -245,12 +225,9 @@ class election_form extends Component {
         this.setState({rates: data});
     };
 
-    confirmBeforeRemoveProposition = () => {
-        this._removePropositionModalConfirm.current.toggle();
-    };
 
     toggleAddCandidate = () => {
-        this._propositionLabelInput.current.value = "";
+        this._candidateLabelInput.current.value = "";
         this.setState({
             isAddCandidateOpen: !this.state.isAddCandidateOpen
         });
@@ -269,13 +246,13 @@ class election_form extends Component {
         });
     };
 
-    setFocusOnPropositionLabelInput = () => {
-        this._propositionLabelInput.current.focus();
+   /* setFocusOnCandidateLabelInput = () => {
+        this._candidateLabelInput.current.focus();
     };
 
-    setFocusOnAddPropositionButton = () => {
-        this._addPropositionButton.current.focus();
-    };
+    setFocusOnAddCandidateButton = () => {
+        this._addCandidateButton.current.focus();
+    };*/
 
 
 
@@ -312,8 +289,8 @@ class election_form extends Component {
 
                 <div className="row mt-5">
                     <div className="col-12">
-                        <b>{this.state.propositionsFields.length}
-                            {(this.state.propositionsFields.length < 2) ? <span> Proposition soumise </span> :
+                        <b>{this.state.candidates.length}
+                            {(this.state.candidates.length < 2) ? <span> Proposition soumise </span> :
                                 <span> Propositions soumises </span>}
                             au vote</b>
                     </div>
@@ -322,8 +299,24 @@ class election_form extends Component {
                 <div className="row mt-2">
                     <div className="col-12">
                         <div className="collection">
-                            {this.state.propositionsFields.map((value) => {
-                                return value
+                            {this.state.candidates.map((obj,index) => {
+                               return (<div key={obj.key}>
+                                    <div className="input-group mb-3">
+                                        <div className="input-group-prepend">
+                                            <span className="input-group-text">{index+1}</span>
+                                        </div>
+                                        <input type="text"  className="form-control" value={obj.value} />
+                                        <div className="input-group-append">
+                                            <ButtonWithConfirm className="btn btn-outline-danger">
+                                                <div key="button"><i className="fas fa-trash-alt"/></div>
+                                                <div key="modal-title">Suppression ?</div>
+                                                <div key="modal-body">Êtes-vous sûr de vouloir supprimer la proposition suivante ?<br /><i>{obj.value}}</i></div>
+                                                <div key="modal-confirm" onClick={() => this.removeCandidate(obj.id)}>Oui</div>
+                                                <div key="modal-cancel">Non</div>
+                                            </ButtonWithConfirm>
+                                        </div>
+                                    </div>
+                                </div>)
                             })}
                         </div>
                     </div>
@@ -333,10 +326,10 @@ class election_form extends Component {
                     <div className="col-12">
                         <Collapse isOpen={this.state.isAddCandidateOpen}
                                   onEntered={() => {
-                                      this._propositionLabelInput.current.focus()
+                                      this._candidateLabelInput.current.focus()
                                   }}
                                   onExited={() => {
-                                      this._addPropositionButton.current.focus()
+                                      this._addCandidateButton.current.focus()
                                   }}>
 
 
@@ -348,8 +341,8 @@ class election_form extends Component {
                                             <label htmlFor="proposition_label"><b>Libellé</b> <span
                                                 className="text-muted">(obligatoire)</span></label>
                                             <input type="text" className="form-control" name="proposition_label"
-                                                   id="proposition_label" onKeyDown={evt => this.addCandidateInput(evt)}
-                                                   ref={this._propositionLabelInput}
+                                                   id="proposition_label" onKeyDown={evt => this.addCandidate(evt)}
+                                                   ref={this._candidateLabelInput}
                                                    placeholder="Nom de la proposition, nom du candidat, etc..."/>
                                         </div>
                                     </div>
@@ -360,7 +353,7 @@ class election_form extends Component {
                                                 <i className="fas fa-times mr-2"/>Annuler
                                             </button>
                                             <button type="button" className="btn btn-success "
-                                                    onClick={evt => this.addCandidateInput(evt)}>
+                                                    onClick={evt => this.addCandidate(evt)}>
                                                 <i className="fas fa-plus mr-2"/>Ajouter
                                             </button>
                                         </div>
@@ -374,7 +367,7 @@ class election_form extends Component {
 
                     <div className="col-12">
                         {this.state.isAddCandidateOpen ? null :
-                            <button className="btn btn-primary" tabIndex="3" ref={this._addPropositionButton}
+                            <button className="btn btn-primary" tabIndex="3" ref={this._addCandidateButton}
                                     name="collapseAddCandidate"
                                     id="collapseAddCandidate" onClick={this.toggleAddCandidate}>
                                 <i className="fas fa-plus-square mr-2"/>Ajouter une proposition</button>}

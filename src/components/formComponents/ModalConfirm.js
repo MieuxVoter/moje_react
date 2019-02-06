@@ -15,25 +15,24 @@ class ModalConfirm extends Component {
         });
     };
 
-    clickConfirm = () => {
-        this.props.confirmCallback();
-        this.toggle();
+    getComponent= (key) => {
+        return this.props.children.filter( (comp) => {
+            return comp.key === key;
+        });
     };
 
     render() {
         return (
-            <div>
                 <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className+" modal-dialog-centered"} >
-                    <ModalHeader toggle={this.toggle}>{this.props.title}</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>{this.getComponent("title")}</ModalHeader>
                     <ModalBody>
-                        {this.props.children}
+                        {this.getComponent("body")}
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.clickConfirm}>{this.props.confirmButtonText}</Button>{' '}
-                        <Button color="secondary" onClick={this.toggle}>{this.props.cancelButtonText}</Button>
+                        <Button color="primary" onClick={this.toggle}>{this.getComponent("confirm")}</Button>{' '}
+                        <Button color="secondary" onClick={this.toggle}>{this.getComponent("cancel")}</Button>
                     </ModalFooter>
                 </Modal>
-            </div>
         );
     }
 }
