@@ -400,6 +400,7 @@ class election_form extends Component {
                                                 {(this.state.rates.length < 2) ? <span> mention </span> :
                                                     <span> mentions </span>}
                                             </b>
+                                            <div className="text-muted">Classez les mentions de la plus positive à la plus négatives</div>
                                         </div>
                                     </div>
 
