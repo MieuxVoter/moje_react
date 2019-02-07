@@ -12,12 +12,25 @@ class election_form extends Component {
     constructor(props) {
         super(props);
         this.is_authenticated();
+
         this._candidateLabelInput = React.createRef();
         this._addCandidateButton = React.createRef();
-        this._removePropositionModalConfirm = React.createRef();
+
+        this._rateLabelInput = React.createRef();
+        this._addRateButton = React.createRef();
+
         this.state = {
+
+            hasEndDate: false,
+            endDate : Date.now(),
+            hasStartDate: false,
+            startDate: Date.now(),
+            hasCustomRates : false,
+
             candidates: [],
-            candidatesFieldId: 0,         
+            candidatesFieldId: 0,
+            isAddCandidateOpen: false,
+
             rates: [
                 {"id": 1, "value": "Excellent"},
                 {"id": 2, "value": "Bien"},
@@ -26,37 +39,14 @@ class election_form extends Component {
                 {"id": 5, "value": "A rejeter"}
             ],
             rateInputFieldId: 0,
-            rateInputFields: [],
-            voterInput: [],
-            electionId: null,
-            electionCreationProgress: false,
-            isAddCandidateOpen: false,
-            hasEndDate: false,
-            endDate : Date.now(),
-            hasStartDate: false,
-            startDate: Date.now()
+            isAddRateOpen: false,
+
+
         };
-        this.initRateInput();
 
     }
 
 
-    init_election_date(id) {
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1; //January is 0!
-        var yyyy = today.getFullYear();
-        if (dd < 10) {
-            dd = '0' + dd
-        }
-        if (mm < 10) {
-            mm = '0' + mm
-        }
-
-        today = yyyy + '-' + mm + '-' + dd;
-        document.getElementById(id).setAttribute("value", today);
-        document.getElementById(id).setAttribute("min", today);
-    }
 
     is_authenticated() {
         if (localStorage.getItem('username') === null && localStorage.getItem('password') === null) {
@@ -129,19 +119,14 @@ class election_form extends Component {
             });
     }
 
-    monTest = () => {
-        alert('ok');
-    };
-
     addCandidate = (evt) => {
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
 
             let candidatesFieldId = this.state.candidatesFieldId + 1;
             let candidateFieldValue = this._candidateLabelInput.current.value;
-            let key = "propositionDiv" + candidatesFieldId;
             let candidatesJson = this.state.candidates;
 
-            candidatesJson.push({id: candidatesFieldId, value: candidateFieldValue, key: key});
+            candidatesJson.push({id: candidatesFieldId, value: candidateFieldValue});
 
             this._candidateLabelInput.current.value = '';
 
@@ -151,76 +136,24 @@ class election_form extends Component {
 
     };
 
+    addRate = (evt) => {
+        if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
 
-    initRateInput() {
-        let rates = this.state.rates;
-        localStorage.setItem('rates', JSON.stringify(rates));
-        let rateInputFields = this.state.rateInputFields;
-        for (let p in rates) {
-            if (rates.hasOwnProperty(p)) {
-                let rate_id = rates[p].id;
-                let rate_value = rates[p].value;
-                rateInputFields.push(
-                    <li id={["li_rate_" + rate_id].join()} key={rate_id}>
-                        <div className="x_panel tile overflow_hidden">
-                            <div className="x_title">
-                                <h2>{rate_value}</h2>
-                                <ul className="nav navbar-right panel_toolbox">
-                                    <li className="dropdown">
-                                        <a href="#edit" className="dropdown-toggle" data-toggle="dropdown" role="button"
-                                           aria-expanded="false"><i className="fa fa-edit"></i></a>
-                                    </li>
-                                    <li><a href="#delete" className="close-link"
-                                           onClick={rate_value => this.removeRateInput(rate_id)}><i
-                                        className="fa fa-close"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </li>);
-                this.state.rateInputFieldId = rate_id;
-            }
+            let ratesFieldId = this.state.rateInputFieldId + 1;
+            let rateFieldValue = this._rateLabelInput.current.value;
+            let ratesJson = this.state.rates;
+
+            ratesJson.push({id: ratesFieldId, value: rateFieldValue});
+
+            this._rateLabelInput.current.value = '';
+
+            this.setState({ratesFieldId:ratesFieldId,isAddRateOpen: false,rates:ratesJson});
+
         }
-    }
 
-    addRateInput = () => {
-        let rateInputFields = this.state.rateInputFields;
-        let rateInputFieldId = this.state.rateInputFieldId + 1;
-        let rate_value = document.getElementById('rate_Input').value;
-        document.getElementById('rate_Input').value = '';
-        this.state.rates.push({id: rateInputFieldId, value: rate_value});
-        let ratesJson = this.state.rates;
-        localStorage.setItem('rates', JSON.stringify(ratesJson));
-        rateInputFields.push(
-            <li id={["li_rate_" + rateInputFieldId].join()} key={rateInputFieldId}>
-                <div className="x_panel tile overflow_hidden">
-                    <div className="x_title">
-                        <h2>{rate_value}</h2>
-                        <ul className="nav navbar-right panel_toolbox">
-                            <li className="dropdown">
-                                <a href="#edit" className="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-expanded="false"><i className="fa fa-edit"></i></a>
-                            </li>
-                            <li><a href="#delete" className="close-link"
-                                   onClick={rate_value => this.removeRateInput(rateInputFieldId)}><i
-                                className="fa fa-close"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </li>);
-        this.setState({rateInputFields})
-        this.setState({rateInputFieldId})
     };
 
-    removeCandidate = (id) => {
-        let data = this.state.candidates.filter(i => i.id !== id);
-        this.setState({candidates: data});
-    };
-
-    removeRateInput = (id) => {
-        let elem = document.getElementById('li_rate_' + id);
-        elem.parentNode.removeChild(elem);
+    removeRate = (id) => {
         let data = this.state.rates.filter(i => i.id !== id);
         this.setState({rates: data});
     };
@@ -230,6 +163,14 @@ class election_form extends Component {
         this._candidateLabelInput.current.value = "";
         this.setState({
             isAddCandidateOpen: !this.state.isAddCandidateOpen
+        });
+
+    };
+
+    toggleAddRate = () => {
+        this._rateLabelInput.current.value = "";
+        this.setState({
+            isAddRateOpen: !this.state.isAddRateOpen
         });
 
     };
@@ -246,14 +187,11 @@ class election_form extends Component {
         });
     };
 
-   /* setFocusOnCandidateLabelInput = () => {
-        this._candidateLabelInput.current.focus();
+    toggleHasCustomRate = () => {
+        this.setState({
+            hasCustomRate: !this.state.hasCustomRate
+        });
     };
-
-    setFocusOnAddCandidateButton = () => {
-        this._addCandidateButton.current.focus();
-    };*/
-
 
 
     render() {
@@ -300,7 +238,7 @@ class election_form extends Component {
                     <div className="col-12">
                         <div className="collection">
                             {this.state.candidates.map((obj,index) => {
-                               return (<div key={obj.key}>
+                               return (<div key={"rowCandidate"+obj.id}>
                                     <div className="input-group mb-3">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text">{index+1}</span>
@@ -442,13 +380,114 @@ class election_form extends Component {
 
                 <div className="row  mb-3 mt-3">
                     <div className="col-auto">
-                        <CheckboxSwitch id="has_custom_mentions" name="has_custom_mentions"/>
+                        <CheckboxSwitch id="has_custom_rates" name="has_custom_rates"  onClick={this.toggleHasCustomRate}/>
                     </div>
                     <div className="col-8">
-                        <label htmlFor="has_custom_mentions" className="pl-2">Personnaliser les mentions</label>
+                        <label htmlFor="has_custom_rates" className="pl-2">Personnaliser les mentions</label>
+
                     </div>
                 </div>
 
+
+                <div className="row">
+                    <div className="col-12">
+                        <div>
+                            <Collapse isOpen={this.state.hasCustomRate}>
+                                <Alert color="secondary" >
+                                    <div className="row ">
+                                        <div className="col-12">
+                                            <b>{this.state.rates.length}
+                                                {(this.state.rates.length < 2) ? <span> mention </span> :
+                                                    <span> mentions </span>}
+                                            </b>
+                                        </div>
+                                    </div>
+
+                                    <div className="row mt-2">
+                                        <div className="col-12">
+                                            <div className="collection">
+                                                {this.state.rates.map((obj,index) => {
+                                                    return (<div key={"rowRate"+obj.id}>
+                                                        <div className="input-group mb-3">
+                                                            <div className="input-group-prepend">
+                                                                <span className="input-group-text">{index+1}</span>
+                                                            </div>
+                                                            <input type="text"  className="form-control" value={obj.value} />
+                                                            <div className="input-group-append">
+                                                                <ButtonWithConfirm className="btn btn-outline-danger">
+                                                                    <div key="button"><i className="fas fa-trash-alt"/></div>
+                                                                    <div key="modal-title">Suppression ?</div>
+                                                                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la mention suivante ?<br /><i>{obj.value}}</i></div>
+                                                                    <div key="modal-confirm" onClick={() => this.removeRate(obj.id)}>Oui</div>
+                                                                    <div key="modal-cancel">Non</div>
+                                                                </ButtonWithConfirm>
+                                                            </div>
+                                                        </div>
+                                                    </div>)
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row mt-2">
+
+                                        <div className="col-12">
+                                            <Collapse isOpen={this.state.isAddRateOpen}
+                                                      onEntered={() => {
+                                                          this._rateLabelInput.current.focus()
+                                                      }}
+                                                      onExited={() => {
+                                                          this._addRateButton.current.focus()
+                                                      }}>
+
+
+                                                <Card>
+                                                    <CardHeader>Ajouter d'une mention</CardHeader>
+                                                    <CardBody>
+                                                        <div className="row">
+                                                            <div className="col-12">
+                                                                <label htmlFor="proposition_label"><b>Libellé</b> <span
+                                                                    className="text-muted">(obligatoire)</span></label>
+                                                                <input type="text" className="form-control" name="proposition_label"
+                                                                       id="proposition_label" onKeyDown={evt => this.addRate(evt)}
+                                                                       ref={this._rateLabelInput}
+                                                                       placeholder="Nom de la proposition, nom du candidat, etc..."/>
+                                                            </div>
+                                                        </div>
+                                                        <div className="row mt-2">
+                                                            <div className="col-md-12 text-right">
+                                                                <button type="button" className="btn btn-secondary mr-2"
+                                                                        onClick={this.toggleAddRate}>
+                                                                    <i className="fas fa-times mr-2"/>Annuler
+                                                                </button>
+                                                                <button type="button" className="btn btn-success "
+                                                                        onClick={evt => this.addRate(evt)}>
+                                                                    <i className="fas fa-plus mr-2"/>Ajouter
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </CardBody>
+                                                </Card>
+
+
+                                            </Collapse>
+                                        </div>
+
+                                        <div className="col-12">
+                                            {this.state.isAddRateOpen ? null :
+                                                <button className="btn btn-primary" tabIndex="3" ref={this._addRateButton}
+                                                        name="collapseAddRate"
+                                                        id="collapseAddRate" onClick={this.toggleAddRate}>
+                                                    <i className="fas fa-plus-square mr-2"/>Ajouter une mention</button>}
+
+                                        </div>
+
+                                    </div>
+
+                                </Alert>
+                            </Collapse>
+                        </div>
+                    </div>
+                </div>
 
 
 
