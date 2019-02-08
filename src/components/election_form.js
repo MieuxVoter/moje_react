@@ -442,7 +442,7 @@ class election_form extends Component {
 
 
                                                 <Card>
-                                                    <CardHeader>Ajouter d'une mention</CardHeader>
+                                                    <CardHeader>Ajout d'une mention</CardHeader>
                                                     <CardBody>
                                                         <div className="row">
                                                             <div className="col-12">
@@ -451,7 +451,7 @@ class election_form extends Component {
                                                                 <input type="text" className="form-control" name="proposition_label"
                                                                        id="proposition_label" onKeyDown={evt => this.addRate(evt)}
                                                                        ref={this._rateLabelInput}
-                                                                       placeholder="Nom de la proposition, nom du candidat, etc..."/>
+                                                                       placeholder="Excellent, Trés bien, bien ..."/>
                                                             </div>
                                                         </div>
                                                         <div className="row mt-2">
