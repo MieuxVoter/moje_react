@@ -88,3 +88,10 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+/*** elements form elections ***/
+.indexNumber{
+    width:40px;
+    display:inline-block;
+    text-align:center;
+}

@@ -19,6 +19,9 @@ class election_form extends Component {
         this._rateLabelInput = React.createRef();
         this._addRateButton = React.createRef();
 
+        this.gradientColors= ["#04b031","#6eca1c","#ecd203","#ffb200","#ff5d00","#e03007","#e0071c","#b20616","#800410","#9b9897"];
+
+
         this.state = {
 
             hasEndDate: false,
@@ -38,11 +41,14 @@ class election_form extends Component {
                 {"id": 4, "value": "Insuffisant"},
                 {"id": 5, "value": "A rejeter"}
             ],
+            rateColors:[],
             rateInputFieldId: 0,
             isAddRateOpen: false,
 
 
         };
+
+        this.state.rateColors=this.getRatesColors(this.state.rates);
 
     }
 
@@ -144,18 +150,19 @@ class election_form extends Component {
             let ratesJson = this.state.rates;
 
             ratesJson.push({id: ratesFieldId, value: rateFieldValue});
-
             this._rateLabelInput.current.value = '';
 
-            this.setState({ratesFieldId:ratesFieldId,isAddRateOpen: false,rates:ratesJson});
+            const rateColors=this.getRatesColors(ratesJson);
+            this.setState({ratesFieldId:ratesFieldId,isAddRateOpen: false,rates:ratesJson, rateColors:rateColors });
 
         }
 
     };
 
     removeRate = (id) => {
-        let data = this.state.rates.filter(i => i.id !== id);
-        this.setState({rates: data});
+        const ratesJson = this.state.rates.filter(i => i.id !== id);
+        const rateColors=this.getRatesColors(ratesJson);
+        this.setState({rates: ratesJson,rateColors:rateColors});
     };
 
 
@@ -173,6 +180,26 @@ class election_form extends Component {
             isAddRateOpen: !this.state.isAddRateOpen
         });
 
+    };
+
+    getRatesColors = (ratesJson) => {
+        let rateColors= [];
+      /*  const middleIndexColor=Math.ceil(ratesJson.length/2);
+        for(let i=0;i<middleIndexColor;i++){
+            rateColors[i]=this.gradientColors[i];
+        }
+        if(middleIndexColor<ratesJson.length){
+            let j=0;
+            for(let i=middleIndexColor;i<ratesJson.length;i++) {
+                j++;
+                rateColors[(ratesJson.length)-j]=this.gradientColors[(this.gradientColors.length)-j];
+            }
+        }*/
+        const step=Math.floor(10/ratesJson.length);
+        for(let i=0;i<ratesJson.length;i++){
+            rateColors[i]=this.gradientColors[i*step];
+        }
+        return rateColors;
     };
 
     toggleHasEndDate = () => {
@@ -238,10 +265,10 @@ class election_form extends Component {
                     <div className="col-12">
                         <div className="collection">
                             {this.state.candidates.map((obj,index) => {
-                               return (<div key={"rowCandidate"+obj.id}>
+                               return (<div key={"rowCandidate"+index}>
                                     <div className="input-group mb-3">
-                                        <div className="input-group-prepend">
-                                            <span className="input-group-text">{index+1}</span>
+                                        <div className="input-group-prepend ">
+                                            <span className="input-group-text indexNumber">{index+1}</span>
                                         </div>
                                         <input type="text"  className="form-control" value={obj.value} />
                                         <div className="input-group-append">
@@ -408,17 +435,17 @@ class election_form extends Component {
                                         <div className="col-12">
                                             <div className="collection">
                                                 {this.state.rates.map((obj,index) => {
-                                                    return (<div key={"rowRate"+obj.id}>
+                                                    return (<div key={"rowRate"+index}>
                                                         <div className="input-group mb-3">
-                                                            <div className="input-group-prepend">
-                                                                <span className="input-group-text">{index+1}</span>
+                                                            <div className="input-group-prepend ">
+                                                                <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : this.state.rateColors[index]} }>{index+1}</span>
                                                             </div>
                                                             <input type="text"  className="form-control" value={obj.value} />
                                                             <div className="input-group-append">
                                                                 <ButtonWithConfirm className="btn btn-outline-danger">
                                                                     <div key="button"><i className="fas fa-trash-alt"/></div>
                                                                     <div key="modal-title">Suppression ?</div>
-                                                                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la mention suivante ?<br /><i>{obj.value}}</i></div>
+                                                                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la mention suivante ?<br /><i>{obj.value}</i></div>
                                                                     <div key="modal-confirm" onClick={() => this.removeRate(obj.id)}>Oui</div>
                                                                     <div key="modal-cancel">Non</div>
                                                                 </ButtonWithConfirm>
