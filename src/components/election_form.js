@@ -19,7 +19,7 @@ class election_form extends Component {
         this._rateLabelInput = React.createRef();
         this._addRateButton = React.createRef();
 
-        this.gradientColors= ["#04b031","#6eca1c","#ecd203","#ffb200","#ff5d00","#e03007","#e0071c","#b20616","#800410","#9b9897"];
+        this.gradientColors=config.get("options").rates_gradient;
 
 
         this.state = {
@@ -31,18 +31,16 @@ class election_form extends Component {
             hasCustomRates : false,
 
             candidates: [],
-            candidatesFieldId: 0,
             isAddCandidateOpen: false,
 
             rates: [
-                {"id": 1, "value": "Excellent"},
-                {"id": 2, "value": "Bien"},
-                {"id": 3, "value": "Passable"},
-                {"id": 4, "value": "Insuffisant"},
-                {"id": 5, "value": "A rejeter"}
+                {id: 1, value: "Excellent"},
+                {id: 2, value: "Bien"},
+                {id: 3, value: "Passable"},
+                {id: 4, value: "Insuffisant"},
+                {id: 5, value: "A rejeter"}
             ],
             rateColors:[],
-            rateInputFieldId: 0,
             isAddRateOpen: false,
 
 
@@ -127,41 +125,52 @@ class election_form extends Component {
 
     addCandidate = (evt) => {
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
-
-            let candidatesFieldId = this.state.candidatesFieldId + 1;
-            let candidateFieldValue = this._candidateLabelInput.current.value;
+            const candidateFieldValue = this._candidateLabelInput.current.value;
             let candidatesJson = this.state.candidates;
-
-            candidatesJson.push({id: candidatesFieldId, value: candidateFieldValue});
-
-            this._candidateLabelInput.current.value = '';
-
-            this.setState({candidatesFieldId:candidatesFieldId,isAddCandidateOpen: false,candidates:candidatesJson});
+            if(candidatesJson.length<config.get("options").max_candidates){
+                candidatesJson.push({ value: candidateFieldValue});
+                candidatesJson.map((obj,index) => {obj.id=index} );
+                this._candidateLabelInput.current.value = '';
+                this.setState({isAddCandidateOpen: false,candidates:candidatesJson});
+            }else{
+                alert("MAX");
+            }
 
         }
 
+    };
+
+    removeCandidate = (id) => {
+        let candidatesJson = this.state.candidates.filter(i => i.id !== id);
+        candidatesJson.map((obj,index) => {obj.id=index} );
+        this.setState({candidates: candidatesJson});
     };
 
     addRate = (evt) => {
+
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
-
-            let ratesFieldId = this.state.rateInputFieldId + 1;
-            let rateFieldValue = this._rateLabelInput.current.value;
+            const rateFieldValue = this._rateLabelInput.current.value;
             let ratesJson = this.state.rates;
+            if(ratesJson.length<config.get("options").max_rates){
+                ratesJson.push({value: rateFieldValue});
+                ratesJson.map((obj,index) => {obj.id=index} );
+                const rateColors=this.getRatesColors(ratesJson);
+                this._rateLabelInput.current.value = '';
+                this.setState({isAddRateOpen: false,rates:ratesJson, rateColors:rateColors });
+            }else{
+                alert("MAX");
+            }
 
-            ratesJson.push({id: ratesFieldId, value: rateFieldValue});
-            this._rateLabelInput.current.value = '';
-
-            const rateColors=this.getRatesColors(ratesJson);
-            this.setState({ratesFieldId:ratesFieldId,isAddRateOpen: false,rates:ratesJson, rateColors:rateColors });
 
         }
 
     };
 
+
     removeRate = (id) => {
-        const ratesJson = this.state.rates.filter(i => i.id !== id);
-        const rateColors=this.getRatesColors(ratesJson);
+        let ratesJson = this.state.rates.filter(i => i.id !== id);
+        ratesJson.map((obj,index) => {obj.id=index} );
+        let rateColors=this.getRatesColors(ratesJson);
         this.setState({rates: ratesJson,rateColors:rateColors});
     };
 
@@ -184,17 +193,6 @@ class election_form extends Component {
 
     getRatesColors = (ratesJson) => {
         let rateColors= [];
-      /*  const middleIndexColor=Math.ceil(ratesJson.length/2);
-        for(let i=0;i<middleIndexColor;i++){
-            rateColors[i]=this.gradientColors[i];
-        }
-        if(middleIndexColor<ratesJson.length){
-            let j=0;
-            for(let i=middleIndexColor;i<ratesJson.length;i++) {
-                j++;
-                rateColors[(ratesJson.length)-j]=this.gradientColors[(this.gradientColors.length)-j];
-            }
-        }*/
         const step=Math.floor(10/ratesJson.length);
         for(let i=0;i<ratesJson.length;i++){
             rateColors[i]=this.gradientColors[i*step];
