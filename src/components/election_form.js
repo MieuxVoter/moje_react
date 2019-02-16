@@ -19,7 +19,6 @@ class election_form extends Component {
         this._addCandidateButton = React.createRef();
         this._rateLabelInput = React.createRef();
         this._addRateButton = React.createRef();
-
         this.state = {
             hasEndDate: false,
             endDate : Date.now(),
@@ -28,12 +27,12 @@ class election_form extends Component {
             hasCustomRates : false,
             candidates: [],
             isAddCandidateOpen: false,
-            rates: config.get("options").default_rates,
+            rates:  JSON.parse(JSON.stringify(config.get("options.default_rates"))),
             rateColors:[],
             isAddRateOpen: false,
         };
 
-        this.gradientColors=config.get("options").rates_gradient;
+        this.gradientColors=config.get("options.rates_gradient");
         this.state.rateColors=this.getRatesColors(this.state.rates);
 
     }
@@ -115,7 +114,7 @@ class election_form extends Component {
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
             const candidateFieldValue = this._candidateLabelInput.current.value;
             let candidatesJson = this.state.candidates;
-            if(candidatesJson.length<config.get("options").max_candidates){
+            if(candidatesJson.length<config.get("options.max_candidates")){
                 candidatesJson.push({ value: candidateFieldValue});
                 candidatesJson.map((obj,index) => {obj.id=index} );
                 this._candidateLabelInput.current.value = '';
@@ -137,7 +136,7 @@ class election_form extends Component {
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
             const rateFieldValue = this._rateLabelInput.current.value;
             let ratesJson = this.state.rates;
-            if(ratesJson.length<config.get("options").max_rates){
+            if(ratesJson.length<config.get("options.max_rates")){
                 ratesJson.push({value: rateFieldValue});
                 ratesJson.map((obj,index) => {obj.id=index} );
                 const rateColors=this.getRatesColors(ratesJson);
@@ -158,8 +157,8 @@ class election_form extends Component {
 
 
     toggleAddCandidate = () => {
-        if(this.state.candidates.length >= config.get("options").max_candidates){
-            toast.error("Vous ne pouvez plus ajouter de proposition ! ("+config.get("options").max_candidates+" max.)", {
+        if(this.state.candidates.length >= config.get("options.max_candidates")){
+            toast.error("Vous ne pouvez plus ajouter de proposition ! ("+config.get("options.max_candidates")+" max.)", {
                 position: toast.POSITION.TOP_CENTER
             });
         }else{
@@ -173,8 +172,8 @@ class election_form extends Component {
     };
 
     toggleAddRate = () => {
-        if(this.state.rates.length >= config.get("options").max_rates){
-            toast.error("Vous ne pouvez plus ajouter de mentions ! ("+config.get("options").max_rates+" max.)", {
+        if(this.state.rates.length >= config.get("options.max_rates")){
+            toast.error("Vous ne pouvez plus ajouter de mentions ! ("+config.get("options.max_rates")+" max.)", {
                 position: toast.POSITION.TOP_CENTER
             });
         }else {
@@ -462,7 +461,7 @@ class election_form extends Component {
 
 
                                                 <Card>
-                                                    <CardHeader>Ajout d'une mention ({config.get("options").max_candidates} max.)</CardHeader>
+                                                    <CardHeader>Ajout d'une mention ({config.get("options").max_rates} max.)</CardHeader>
                                                     <CardBody>
                                                         <div className="row">
                                                             <div className="col-12">
