@@ -6,6 +6,7 @@ import ButtonWithConfirm from "./formComponents/ButtonWithConfirm";
 import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "react-datepicker/dist/react-datepicker.css";
+import {arrayMove, sortableContainer, sortableElement} from 'react-sortable-hoc';
 
 
 import DatePicker, {registerLocale, setDefaultLocale} from 'react-datepicker';
@@ -14,6 +15,56 @@ import fr from 'date-fns/locale/fr'
 
 registerLocale('fr',fr );
 setDefaultLocale('fr');
+
+//TODO : rendre les champs modifiable (defaultValue puis event onChange)
+const SortableCandidate = sortableElement(({form,value,position}) => <li className="sortable">
+    <div key={"rowCandidate"+position}>
+        <div className="input-group mb-3">
+            <div className="input-group-prepend ">
+                <span className="input-group-text indexNumber">{position+1}</span>
+            </div>
+            <input type="text" className="form-control" value={value} readOnly />
+            <div className="input-group-append">
+                <ButtonWithConfirm className="btn btn-outline-danger">
+                    <div key="button"><i className="fas fa-trash-alt"/></div>
+                    <div key="modal-title">Suppression ?</div>
+                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la proposition suivante ?<br /><i>{value}</i></div>
+                    <div key="modal-confirm" onClick={() => form.removeCandidate(position)}>Oui</div>
+                    <div key="modal-cancel">Non</div>
+                </ButtonWithConfirm>
+            </div>
+        </div>
+    </div>
+</li>);
+
+//TODO : rendre les champs modifiable (defaultValue puis event onChange)
+const SortableRate = sortableElement(({form,value,position,colors}) => <li className="sortable">
+    <div key={"rowRate"+position}>
+        <div className="input-group mb-3">
+            <div className="input-group-prepend ">
+                <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : colors[position]} }>{position+1}</span>
+            </div>
+            <input type="text"  className="form-control" value={value} readOnly />
+            <div className="input-group-append">
+                <ButtonWithConfirm className="btn btn-outline-danger">
+                    <div key="button"><i className="fas fa-trash-alt"/></div>
+
+                    <div key="modal-title">Suppression ?</div>
+                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la mention suivante ?<br /><i>{value}</i></div>
+                    <div key="modal-confirm" onClick={() => form.removeRate(position)}>Oui</div>
+                    <div key="modal-cancel">Non</div>
+                </ButtonWithConfirm>
+            </div>
+        </div>
+    </div>
+</li>);
+
+
+
+
+const SortableContainer = sortableContainer(({children}) => {
+    return <ul class="sortable">{children}</ul>;
+});
 
 
 class election_form extends Component {
@@ -124,7 +175,7 @@ class election_form extends Component {
             let candidatesJson = this.state.candidates;
             if(candidatesJson.length<config.get("options.max_candidates")){
                 candidatesJson.push({ value: candidateFieldValue});
-                candidatesJson.map((obj,index) => {obj.id=index} );
+                candidatesJson.map((obj,index) => {obj.position=index} );
                 this._candidateLabelInput.current.value = '';
                 this.setState({isAddCandidateOpen: false,candidates:candidatesJson});
             }
@@ -133,9 +184,9 @@ class election_form extends Component {
 
     };
 
-    removeCandidate = (id) => {
-        let candidatesJson = this.state.candidates.filter(i => i.id !== id);
-        candidatesJson.map((obj,index) => {obj.id=index} );
+    removeCandidate = (position) => {
+        let candidatesJson = this.state.candidates.filter(i => i.position !== position);
+        candidatesJson.map((obj,index) => {obj.position=index} );
         this.setState({candidates: candidatesJson});
     };
 
@@ -146,7 +197,7 @@ class election_form extends Component {
             let ratesJson = this.state.rates;
             if(ratesJson.length<config.get("options.max_rates")){
                 ratesJson.push({value: rateFieldValue});
-                ratesJson.map((obj,index) => {obj.id=index} );
+                ratesJson.map((obj,index) => {obj.position=index} );
                 const rateColors=this.getRatesColors(ratesJson);
                 this._rateLabelInput.current.value = '';
                 this.setState({isAddRateOpen: false,rates:ratesJson, rateColors:rateColors });
@@ -156,9 +207,9 @@ class election_form extends Component {
     };
 
 
-    removeRate = (id) => {
-        let ratesJson = this.state.rates.filter(i => i.id !== id);
-        ratesJson.map((obj,index) => {obj.id=index} );
+    removeRate = (position) => {
+        let ratesJson = this.state.rates.filter(obj => obj.position !== position);
+        ratesJson.map((obj,index) => {obj.position=index} );
         let rateColors=this.getRatesColors(ratesJson);
         this.setState({rates: ratesJson,rateColors:rateColors});
     };
@@ -220,8 +271,31 @@ class election_form extends Component {
         });
     };
 
+    onCandidatesSortEnd = ({oldIndex, newIndex}) => {
+        let candidatesJson = this.state.candidates;
+        candidatesJson = arrayMove(candidatesJson, oldIndex, newIndex);
+        candidatesJson.map((obj,index) => {obj.position=index} );
+        this.setState({candidates: candidatesJson});
+    };
+
+    onRatesSortEnd = ({oldIndex, newIndex}) => {
+        let ratesJson = JSON.parse(JSON.stringify(this.state.rates));
+      //  console.log("AVANT :");
+       // console.log(ratesJson);
+        ratesJson = arrayMove(ratesJson, oldIndex, newIndex);
+        ratesJson.map((obj,index) => { obj.position=index } );
+       // console.log("APRES :");
+        //console.log(ratesJson);
+        let rateColors=this.getRatesColors(ratesJson);
+        this.setState({rates: ratesJson,rateColors:rateColors, test:2});
+    };
+
+
+
 
     render() {
+        //console.log("render");
+        //console.log(this.state.rates);
         return (
             <div className="container">
                 <ToastContainer />
@@ -231,6 +305,11 @@ class election_form extends Component {
                         <hr/>
                     </div>
                 </div>
+
+
+
+
+
 
                 <div className="row mt-3">
                     <div className="col-12">
@@ -264,25 +343,11 @@ class election_form extends Component {
                 <div className="row mt-2">
                     <div className="col-12">
                         <div className="collection">
-                            {this.state.candidates.map((obj,index) => {
-                               return (<div key={"rowCandidate"+index}>
-                                    <div className="input-group mb-3">
-                                        <div className="input-group-prepend ">
-                                            <span className="input-group-text indexNumber">{index+1}</span>
-                                        </div>
-                                        <input type="text" className="form-control" defaultValue={obj.value} />
-                                        <div className="input-group-append">
-                                            <ButtonWithConfirm className="btn btn-outline-danger">
-                                                <div key="button"><i className="fas fa-trash-alt"/></div>
-                                                <div key="modal-title">Suppression ?</div>
-                                                <div key="modal-body">Êtes-vous sûr de vouloir supprimer la proposition suivante ?<br /><i>{obj.value}}</i></div>
-                                                <div key="modal-confirm" onClick={() => this.removeCandidate(obj.id)}>Oui</div>
-                                                <div key="modal-cancel">Non</div>
-                                            </ButtonWithConfirm>
-                                        </div>
-                                    </div>
-                                </div>)
-                            })}
+                            <SortableContainer onSortEnd={this.onCandidatesSortEnd}>
+                                {this.state.candidates.map((obj, index) => (
+                                    <SortableCandidate key={`item-${index}`} index={index} value={obj.value} position={obj.position} form={this} />
+                                ))}
+                            </SortableContainer>
                         </div>
                     </div>
                 </div>
@@ -434,25 +499,14 @@ class election_form extends Component {
                                     <div className="row mt-2">
                                         <div className="col-12">
                                             <div className="collection">
-                                                {this.state.rates.map((obj,index) => {
-                                                    return (<div key={"rowRate"+index}>
-                                                        <div className="input-group mb-3">
-                                                            <div className="input-group-prepend ">
-                                                                <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : this.state.rateColors[index]} }>{index+1}</span>
-                                                            </div>
-                                                            <input type="text"  className="form-control" defaultValue={obj.value} />
-                                                            <div className="input-group-append">
-                                                                <ButtonWithConfirm className="btn btn-outline-danger">
-                                                                    <div key="button"><i className="fas fa-trash-alt"/></div>
-                                                                    <div key="modal-title">Suppression ?</div>
-                                                                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la mention suivante ?<br /><i>{obj.value}</i></div>
-                                                                    <div key="modal-confirm" onClick={() => this.removeRate(obj.id)}>Oui</div>
-                                                                    <div key="modal-cancel">Non</div>
-                                                                </ButtonWithConfirm>
-                                                            </div>
-                                                        </div>
-                                                    </div>)
-                                                })}
+                                                <SortableContainer onSortEnd={this.onRatesSortEnd}>
+                                                    {this.state.rates.map((obj, index) => (
+                                                        <SortableRate key={`item-${index}`} index={index} value={obj.value} position={obj.position} form={this} colors={this.state.rateColors}/>
+                                                    ))}
+                                                </SortableContainer>
+
+
+
                                             </div>
                                         </div>
                                     </div>

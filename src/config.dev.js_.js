@@ -18,11 +18,11 @@ config.set({
             "#9b9897"
         ], //ajouter le nombre de couleurs correspondant au max_rates
         default_rates: [
-            {id: 1, value: "Excellent"},
-            {id: 2, value: "Bien"},
-            {id: 3, value: "Passable"},
-            {id: 4, value: "Insuffisant"},
-            {id: 5, value: "A rejeter"}
+            {position: 0, value: "Excellent"},
+            {position: 1, value: "Bien"},
+            {position: 2, value: "Passable"},
+            {position: 3, value: "Insuffisant"},
+            {position: 4, value: "A rejeter"}
         ]
     }
 });

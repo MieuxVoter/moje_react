@@ -95,3 +95,14 @@ input:checked + .slider:before {
     display:inline-block;
     text-align:center;
 }
+
+
+ul.sortable,li.sortable{
+    padding:0;
+    margin:0;
+    list-style-type: none;
+}
+
+.sortable .input-group-prepend{
+    cursor: move;
+}
