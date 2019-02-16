@@ -1,12 +1,20 @@
 import React, {Component} from "react";
 import config from 'react-global-configuration';
-import {Collapse, Card, CardBody, CardHeader, Alert} from 'reactstrap';
+import {Alert, Card, CardBody, CardHeader, Collapse} from 'reactstrap';
 import CheckboxSwitch from "./formComponents/CheckboxSwitch";
 import ButtonWithConfirm from "./formComponents/ButtonWithConfirm";
-import DatePicker from 'react-datepicker';
-import { ToastContainer, toast } from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "react-datepicker/dist/react-datepicker.css";
+
+
+import DatePicker, {registerLocale, setDefaultLocale} from 'react-datepicker';
+//TODO : dynamique + detection navigateur
+import fr from 'date-fns/locale/fr'
+
+registerLocale('fr',fr );
+setDefaultLocale('fr');
+
 
 class election_form extends Component {
 
