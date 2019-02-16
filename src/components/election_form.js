@@ -24,15 +24,14 @@ const SortableCandidate = sortableElement(({form,value,position}) => <li classNa
                 <span className="input-group-text indexNumber">{position+1}</span>
             </div>
             <input type="text" className="form-control" value={value} readOnly />
-            <div className="input-group-append">
-                <ButtonWithConfirm className="btn btn-outline-danger">
-                    <div key="button"><i className="fas fa-trash-alt"/></div>
-                    <div key="modal-title">Suppression ?</div>
-                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la proposition suivante ?<br /><i>{value}</i></div>
-                    <div key="modal-confirm" onClick={() => form.removeCandidate(position)}>Oui</div>
-                    <div key="modal-cancel">Non</div>
-                </ButtonWithConfirm>
-            </div>
+            <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
+                <div key="button"><i className="fas fa-trash-alt"/></div>
+                <div key="modal-title">Suppression ?</div>
+                <div key="modal-body">Êtes-vous sûr de vouloir supprimer la proposition suivante ?<br /><i>{value}</i></div>
+                <div key="modal-confirm" onClick={() => form.removeCandidate(position)}>Oui</div>
+                <div key="modal-cancel">Non</div>
+            </ButtonWithConfirm>
+
         </div>
     </div>
 </li>);
@@ -45,16 +44,13 @@ const SortableRate = sortableElement(({form,value,position,colors}) => <li class
                 <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : colors[position]} }>{position+1}</span>
             </div>
             <input type="text"  className="form-control" value={value} readOnly />
-            <div className="input-group-append">
-                <ButtonWithConfirm className="btn btn-outline-danger">
-                    <div key="button"><i className="fas fa-trash-alt"/></div>
-
-                    <div key="modal-title">Suppression ?</div>
-                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la mention suivante ?<br /><i>{value}</i></div>
-                    <div key="modal-confirm" onClick={() => form.removeRate(position)}>Oui</div>
-                    <div key="modal-cancel">Non</div>
-                </ButtonWithConfirm>
-            </div>
+            <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
+                <div key="button"><i className="fas fa-trash-alt"/></div>
+                <div key="modal-title">Suppression ?</div>
+                <div key="modal-body">Êtes-vous sûr de vouloir supprimer la mention suivante ?<br /><i>{value}</i></div>
+                <div key="modal-confirm" onClick={() => form.removeRate(position)}>Oui</div>
+                <div key="modal-cancel">Non</div>
+            </ButtonWithConfirm>
         </div>
     </div>
 </li>);
