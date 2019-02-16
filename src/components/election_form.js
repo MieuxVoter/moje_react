@@ -6,7 +6,6 @@ import ButtonWithConfirm from "./formComponents/ButtonWithConfirm";
 import DatePicker from 'react-datepicker';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import "react-datepicker/dist/react-datepicker.css";
 
 class election_form extends Component {
@@ -264,7 +263,7 @@ class election_form extends Component {
                                         <div className="input-group-prepend ">
                                             <span className="input-group-text indexNumber">{index+1}</span>
                                         </div>
-                                        <input type="text"  className="form-control" value={obj.value} />
+                                        <input type="text" className="form-control" defaultValue={obj.value} />
                                         <div className="input-group-append">
                                             <ButtonWithConfirm className="btn btn-outline-danger">
                                                 <div key="button"><i className="fas fa-trash-alt"/></div>
@@ -434,7 +433,7 @@ class election_form extends Component {
                                                             <div className="input-group-prepend ">
                                                                 <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : this.state.rateColors[index]} }>{index+1}</span>
                                                             </div>
-                                                            <input type="text"  className="form-control" value={obj.value} />
+                                                            <input type="text"  className="form-control" defaultValue={obj.value} />
                                                             <div className="input-group-append">
                                                                 <ButtonWithConfirm className="btn btn-outline-danger">
                                                                     <div key="button"><i className="fas fa-trash-alt"/></div>
