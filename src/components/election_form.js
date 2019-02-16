@@ -4,6 +4,8 @@ import {Collapse, Card, CardBody, CardHeader, Alert} from 'reactstrap';
 import CheckboxSwitch from "./formComponents/CheckboxSwitch";
 import ButtonWithConfirm from "./formComponents/ButtonWithConfirm";
 import DatePicker from 'react-datepicker';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -11,41 +13,28 @@ class election_form extends Component {
 
     constructor(props) {
         super(props);
+
         this.is_authenticated();
 
         this._candidateLabelInput = React.createRef();
         this._addCandidateButton = React.createRef();
-
         this._rateLabelInput = React.createRef();
         this._addRateButton = React.createRef();
 
-        this.gradientColors=config.get("options").rates_gradient;
-
-
         this.state = {
-
             hasEndDate: false,
             endDate : Date.now(),
             hasStartDate: false,
             startDate: Date.now(),
             hasCustomRates : false,
-
             candidates: [],
             isAddCandidateOpen: false,
-
-            rates: [
-                {id: 1, value: "Excellent"},
-                {id: 2, value: "Bien"},
-                {id: 3, value: "Passable"},
-                {id: 4, value: "Insuffisant"},
-                {id: 5, value: "A rejeter"}
-            ],
+            rates: config.get("options").default_rates,
             rateColors:[],
             isAddRateOpen: false,
-
-
         };
 
+        this.gradientColors=config.get("options").rates_gradient;
         this.state.rateColors=this.getRatesColors(this.state.rates);
 
     }
@@ -132,8 +121,6 @@ class election_form extends Component {
                 candidatesJson.map((obj,index) => {obj.id=index} );
                 this._candidateLabelInput.current.value = '';
                 this.setState({isAddCandidateOpen: false,candidates:candidatesJson});
-            }else{
-                alert("MAX");
             }
 
         }
@@ -157,11 +144,7 @@ class election_form extends Component {
                 const rateColors=this.getRatesColors(ratesJson);
                 this._rateLabelInput.current.value = '';
                 this.setState({isAddRateOpen: false,rates:ratesJson, rateColors:rateColors });
-            }else{
-                alert("MAX");
             }
-
-
         }
 
     };
@@ -176,18 +159,31 @@ class election_form extends Component {
 
 
     toggleAddCandidate = () => {
-        this._candidateLabelInput.current.value = "";
-        this.setState({
-            isAddCandidateOpen: !this.state.isAddCandidateOpen
-        });
+        if(this.state.candidates.length >= config.get("options").max_candidates){
+            toast.error("Vous ne pouvez plus ajouter de proposition ! ("+config.get("options").max_candidates+" max.)", {
+                position: toast.POSITION.TOP_CENTER
+            });
+        }else{
+            this._candidateLabelInput.current.value = "";
+            this.setState({
+                isAddCandidateOpen: !this.state.isAddCandidateOpen
+            });
+        }
+
 
     };
 
     toggleAddRate = () => {
-        this._rateLabelInput.current.value = "";
-        this.setState({
-            isAddRateOpen: !this.state.isAddRateOpen
-        });
+        if(this.state.rates.length >= config.get("options").max_rates){
+            toast.error("Vous ne pouvez plus ajouter de mentions ! ("+config.get("options").max_rates+" max.)", {
+                position: toast.POSITION.TOP_CENTER
+            });
+        }else {
+            this._rateLabelInput.current.value = "";
+            this.setState({
+                isAddRateOpen: !this.state.isAddRateOpen
+            });
+        }
 
     };
 
@@ -222,7 +218,7 @@ class election_form extends Component {
     render() {
         return (
             <div className="container">
-
+                <ToastContainer />
                 <div className="row">
                     <div className="col-12">
                         <h1>Nouveau Scrutin</h1>
@@ -297,7 +293,7 @@ class election_form extends Component {
 
 
                             <Card>
-                                <CardHeader>Ajout d'une proposition</CardHeader>
+                                <CardHeader>Ajout d'une proposition ({config.get("options").max_candidates} max.) </CardHeader>
                                 <CardBody>
                                     <div className="row">
                                         <div className="col-12">
@@ -467,7 +463,7 @@ class election_form extends Component {
 
 
                                                 <Card>
-                                                    <CardHeader>Ajout d'une mention</CardHeader>
+                                                    <CardHeader>Ajout d'une mention ({config.get("options").max_candidates} max.)</CardHeader>
                                                     <CardBody>
                                                         <div className="row">
                                                             <div className="col-12">
