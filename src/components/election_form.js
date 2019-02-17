@@ -23,7 +23,7 @@ const SortableCandidate = sortableElement(({form,value,position}) => <li classNa
             <div className="input-group-prepend ">
                 <span className="input-group-text indexNumber">{position+1}</span>
             </div>
-            <input type="text" className="form-control" value={value} readOnly />
+            <input type="text" className="form-control" defaultValue={value} onChange={(event) => form.editCandidate(event,position)} />
             <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
                 <div key="button"><i className="fas fa-trash-alt"/></div>
                 <div key="modal-title">Suppression ?</div>
@@ -43,7 +43,7 @@ const SortableRate = sortableElement(({form,value,position,colors}) => <li class
             <div className="input-group-prepend ">
                 <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : colors[position]} }>{position+1}</span>
             </div>
-            <input type="text"  className="form-control" value={value} readOnly />
+            <input type="text"  className="form-control" defaultValue={value} onChange={(event) => form.editRate(event,position)} />
             <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
                 <div key="button"><i className="fas fa-trash-alt"/></div>
                 <div key="modal-title">Suppression ?</div>
@@ -59,7 +59,7 @@ const SortableRate = sortableElement(({form,value,position,colors}) => <li class
 
 
 const SortableContainer = sortableContainer(({children}) => {
-    return <ul class="sortable">{children}</ul>;
+    return <ul className="sortable">{children}</ul>;
 });
 
 
@@ -76,9 +76,9 @@ class election_form extends Component {
         this._addRateButton = React.createRef();
         this.state = {
             hasEndDate: false,
-            endDate : Date.now(),
+            endDate : new Date(),
             hasStartDate: false,
-            startDate: Date.now(),
+            startDate: new Date(),
             hasCustomRates : false,
             candidates: [],
             isAddCandidateOpen: false,
@@ -186,6 +186,12 @@ class election_form extends Component {
         this.setState({candidates: candidatesJson});
     };
 
+    editCandidate = (event,position) => {
+        let candidatesJson = this.state.candidates;
+        candidatesJson.map((obj,index) => {if(obj.position===position){ obj.value=event.currentTarget.value } } );
+        this.setState({candidates: candidatesJson});
+    };
+
     addRate = (evt) => {
 
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
@@ -208,6 +214,12 @@ class election_form extends Component {
         ratesJson.map((obj,index) => {obj.position=index} );
         let rateColors=this.getRatesColors(ratesJson);
         this.setState({rates: ratesJson,rateColors:rateColors});
+    };
+
+    editRate = (event,position) => {
+        let ratesJson = this.state.rates;
+        ratesJson.map((obj,index) => {if(obj.position===position){ obj.value=event.currentTarget.value } } );
+        this.setState({rate: ratesJson});
     };
 
 
@@ -276,12 +288,8 @@ class election_form extends Component {
 
     onRatesSortEnd = ({oldIndex, newIndex}) => {
         let ratesJson = JSON.parse(JSON.stringify(this.state.rates));
-      //  console.log("AVANT :");
-       // console.log(ratesJson);
         ratesJson = arrayMove(ratesJson, oldIndex, newIndex);
         ratesJson.map((obj,index) => { obj.position=index } );
-       // console.log("APRES :");
-        //console.log(ratesJson);
         let rateColors=this.getRatesColors(ratesJson);
         this.setState({rates: ratesJson,rateColors:rateColors, test:2});
     };
@@ -436,6 +444,7 @@ class election_form extends Component {
 
                                     {/*<input type="date" id="end_election_date" max="2100-06-25" name="end_date_election"/>*/}
                                     <span><b>Date de début :</b></span> <DatePicker id="start_election_date" name="start_date_election" className="ml-2"
+
                                                                                     selected={this.state.startDate}
                                                                                     onChange={(date) => {  this.setState({ startDate:date })  }}
 
