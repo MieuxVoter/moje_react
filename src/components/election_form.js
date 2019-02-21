@@ -17,38 +17,37 @@ registerLocale('fr',fr );
 setDefaultLocale('fr');
 
 //TODO : rendre les champs modifiable (defaultValue puis event onChange)
-const SortableCandidate = sortableElement(({form,value,position}) => <li className="sortable">
-    <div key={"rowCandidate"+position}>
+const SortableCandidate = sortableElement(({value,sortIndex,form}) => <li className="sortable">
+    <div key={"rowCandidate"+sortIndex}>
         <div className="input-group mb-3">
             <div className="input-group-prepend ">
-                <span className="input-group-text indexNumber">{position+1}</span>
+                <span className="input-group-text indexNumber">{sortIndex+1}</span>
             </div>
-            <input type="text" className="form-control" defaultValue={value} onChange={(event) => form.editCandidate(event,position)} />
+            <input type="text" className="form-control" value={value} onChange={(event) => form.editCandidate(event,sortIndex)} />
             <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
                 <div key="button"><i className="fas fa-trash-alt"/></div>
                 <div key="modal-title">Suppression ?</div>
                 <div key="modal-body">Êtes-vous sûr de vouloir supprimer la proposition suivante ?<br /><i>{value}</i></div>
-                <div key="modal-confirm" onClick={() => form.removeCandidate(position)}>Oui</div>
+                <div key="modal-confirm" onClick={() => form.removeCandidate(sortIndex)}>Oui</div>
                 <div key="modal-cancel">Non</div>
             </ButtonWithConfirm>
-
         </div>
     </div>
 </li>);
 
 //TODO : rendre les champs modifiable (defaultValue puis event onChange)
-const SortableRate = sortableElement(({form,value,position,colors}) => <li className="sortable">
-    <div key={"rowRate"+position}>
+const SortableRate = sortableElement(({value,sortIndex,form,colors}) => <li className="sortable">
+    <div key={"rowRate"+sortIndex}>
         <div className="input-group mb-3">
             <div className="input-group-prepend ">
-                <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : colors[position]} }>{position+1}</span>
+                <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : colors[sortIndex]} }>{sortIndex+1}</span>
             </div>
-            <input type="text"  className="form-control" defaultValue={value} onChange={(event) => form.editRate(event,position)} />
+            <input type="text"  className="form-control" value={value} onChange={(event) => form.editRate(event,sortIndex)} />
             <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
                 <div key="button"><i className="fas fa-trash-alt"/></div>
                 <div key="modal-title">Suppression ?</div>
                 <div key="modal-body">Êtes-vous sûr de vouloir supprimer la mention suivante ?<br /><i>{value}</i></div>
-                <div key="modal-confirm" onClick={() => form.removeRate(position)}>Oui</div>
+                <div key="modal-confirm" onClick={() => form.removeRate(sortIndex)}>Oui</div>
                 <div key="modal-cancel">Non</div>
             </ButtonWithConfirm>
         </div>
@@ -58,9 +57,18 @@ const SortableRate = sortableElement(({form,value,position,colors}) => <li class
 
 
 
-const SortableContainer = sortableContainer(({children}) => {
-    return <ul className="sortable">{children}</ul>;
+const SortableCandidatesContainer = sortableContainer(({items,form}) => {
+    return <ul className="sortable">{items.map((value, index) => (
+        <SortableCandidate key={`item-${index}`} index={index} sortIndex={index} value={value} form={form} />
+    ))}</ul>;
 });
+
+const SortableRatesContainer = sortableContainer(({items,form,colors}) => {
+    return <ul className="sortable">{items.map((value, index) => (
+        <SortableRate key={`item-${index}`} index={index} sortIndex={index} value={value} form={form} colors={colors}/>
+    ))}</ul>;
+});
+
 
 
 class election_form extends Component {
@@ -168,58 +176,56 @@ class election_form extends Component {
     addCandidate = (evt) => {
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
             const candidateFieldValue = this._candidateLabelInput.current.value;
-            let candidatesJson = this.state.candidates;
-            if(candidatesJson.length<config.get("options.max_candidates")){
-                candidatesJson.push({ value: candidateFieldValue});
-                candidatesJson.map((obj,index) => {obj.position=index} );
+            let candidates = this.state.candidates;
+            if(candidates.length<config.get("options.max_candidates")){
+                candidates.push( candidateFieldValue);
                 this._candidateLabelInput.current.value = '';
-                this.setState({isAddCandidateOpen: false,candidates:candidatesJson});
+                this.setState({isAddCandidateOpen: false,candidates:candidates});
             }
 
         }
 
     };
 
-    removeCandidate = (position) => {
-        let candidatesJson = this.state.candidates.filter(i => i.position !== position);
-        candidatesJson.map((obj,index) => {obj.position=index} );
-        this.setState({candidates: candidatesJson});
+    removeCandidate = (index) => {
+        let candidates = this.state.candidates;
+        candidates.splice(index,1);
+        this.setState({candidates: candidates});
     };
 
-    editCandidate = (event,position) => {
-        let candidatesJson = this.state.candidates;
-        candidatesJson.map((obj,index) => {if(obj.position===position){ obj.value=event.currentTarget.value } } );
-        this.setState({candidates: candidatesJson});
+    editCandidate = (event,index) => {
+        let candidates = this.state.candidates;
+        candidates[index]=event.currentTarget.value;
+        this.setState({candidates: candidates});
     };
 
     addRate = (evt) => {
 
         if (evt.type === "click" || (evt.type === "keydown" && evt.keyCode === 13)) {
             const rateFieldValue = this._rateLabelInput.current.value;
-            let ratesJson = this.state.rates;
-            if(ratesJson.length<config.get("options.max_rates")){
-                ratesJson.push({value: rateFieldValue});
-                ratesJson.map((obj,index) => {obj.position=index} );
-                const rateColors=this.getRatesColors(ratesJson);
+            let rates = this.state.rates;
+            if(rates.length<config.get("options.max_rates")){
+                rates.push( rateFieldValue);
+                const rateColors=this.getRatesColors(rates);
                 this._rateLabelInput.current.value = '';
-                this.setState({isAddRateOpen: false,rates:ratesJson, rateColors:rateColors });
+                this.setState({isAddRateOpen: false,rates:rates, rateColors:rateColors });
             }
         }
 
     };
 
 
-    removeRate = (position) => {
-        let ratesJson = this.state.rates.filter(obj => obj.position !== position);
-        ratesJson.map((obj,index) => {obj.position=index} );
-        let rateColors=this.getRatesColors(ratesJson);
-        this.setState({rates: ratesJson,rateColors:rateColors});
+    removeRate = (index) => {
+        let rates = this.state.rates;
+        rates.splice(index,1);
+        let rateColors=this.getRatesColors(rates);
+        this.setState({rates: rates,rateColors:rateColors});
     };
 
-    editRate = (event,position) => {
-        let ratesJson = this.state.rates;
-        ratesJson.map((obj,index) => {if(obj.position===position){ obj.value=event.currentTarget.value } } );
-        this.setState({rate: ratesJson});
+    editRate = (event,index) => {
+        let rates = this.state.rates;
+        rates[index]=event.currentTarget.value;
+        this.setState({rate: rates});
     };
 
 
@@ -280,18 +286,17 @@ class election_form extends Component {
     };
 
     onCandidatesSortEnd = ({oldIndex, newIndex}) => {
-        let candidatesJson = this.state.candidates;
-        candidatesJson = arrayMove(candidatesJson, oldIndex, newIndex);
-        candidatesJson.map((obj,index) => {obj.position=index} );
-        this.setState({candidates: candidatesJson});
+        let candidates = this.state.candidates;
+        candidates = arrayMove(candidates, oldIndex, newIndex);
+        this.setState({candidates: candidates});
     };
 
     onRatesSortEnd = ({oldIndex, newIndex}) => {
-        let ratesJson = JSON.parse(JSON.stringify(this.state.rates));
-        ratesJson = arrayMove(ratesJson, oldIndex, newIndex);
-        ratesJson.map((obj,index) => { obj.position=index } );
-        let rateColors=this.getRatesColors(ratesJson);
-        this.setState({rates: ratesJson,rateColors:rateColors, test:2});
+        let rates = this.state.rates;
+        rates= arrayMove(rates, oldIndex, newIndex);
+        let rateColors=this.getRatesColors(rates);
+       this.setState({rates: rates,rateColors:rateColors});
+
     };
 
 
@@ -300,6 +305,7 @@ class election_form extends Component {
     render() {
         //console.log("render");
         //console.log(this.state.rates);
+
         return (
             <div className="container">
                 <ToastContainer />
@@ -346,13 +352,7 @@ class election_form extends Component {
 
                 <div className="row mt-2">
                     <div className="col-12">
-                        <div className="collection">
-                            <SortableContainer onSortEnd={this.onCandidatesSortEnd}>
-                                {this.state.candidates.map((obj, index) => (
-                                    <SortableCandidate key={`item-${index}`} index={index} value={obj.value} position={obj.position} form={this} />
-                                ))}
-                            </SortableContainer>
-                        </div>
+                        <SortableCandidatesContainer items={this.state.candidates} onSortEnd={this.onCandidatesSortEnd} form={this} />
                     </div>
                 </div>
                 <div className="row mt-2">
@@ -503,16 +503,7 @@ class election_form extends Component {
 
                                     <div className="row mt-2">
                                         <div className="col-12">
-                                            <div className="collection">
-                                                <SortableContainer onSortEnd={this.onRatesSortEnd}>
-                                                    {this.state.rates.map((obj, index) => (
-                                                        <SortableRate key={`item-${index}`} index={index} value={obj.value} position={obj.position} form={this} colors={this.state.rateColors}/>
-                                                    ))}
-                                                </SortableContainer>
-
-
-
-                                            </div>
+                                            <SortableRatesContainer items={this.state.rates} onSortEnd={this.onRatesSortEnd} form={this} colors={this.state.rateColors}/>
                                         </div>
                                     </div>
                                     <div className="row mt-2">
