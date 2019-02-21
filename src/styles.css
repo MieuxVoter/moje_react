@@ -106,3 +106,14 @@ ul.sortable,li.sortable{
 .sortable .input-group-prepend{
     cursor: move;
 }
+
+.sortabe-colored-disc{
+  color:#ffffff;
+    height:30px;
+    width:30px;
+    line-height:30px;
+    text-align:center;
+    padding:0;
+    margin:5px 5px;
+    border-radius: 30px;
+}

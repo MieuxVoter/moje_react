@@ -6,7 +6,7 @@ import ButtonWithConfirm from "./formComponents/ButtonWithConfirm";
 import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "react-datepicker/dist/react-datepicker.css";
-import {arrayMove, sortableContainer, sortableElement} from 'react-sortable-hoc';
+import {arrayMove, sortableContainer, sortableElement, sortableHandle} from 'react-sortable-hoc';
 
 
 import DatePicker, {registerLocale, setDefaultLocale} from 'react-datepicker';
@@ -16,12 +16,17 @@ import fr from 'date-fns/locale/fr'
 registerLocale('fr',fr );
 setDefaultLocale('fr');
 
+const DragHandle = sortableHandle(({children}) => <span className="input-group-text indexNumber">{children}</span>);
+const ColoredDragHandle = sortableHandle(({children}) => <span>{children}</span>);
+
 //TODO : rendre les champs modifiable (defaultValue puis event onChange)
 const SortableCandidate = sortableElement(({value,sortIndex,form}) => <li className="sortable">
     <div key={"rowCandidate"+sortIndex}>
         <div className="input-group mb-3">
-            <div className="input-group-prepend ">
-                <span className="input-group-text indexNumber">{sortIndex+1}</span>
+            <div className="input-group-prepend" >
+                <DragHandle>
+                    <span>{sortIndex+1}</span>
+                </DragHandle>
             </div>
             <input type="text" className="form-control" value={value} onChange={(event) => form.editCandidate(event,sortIndex)} />
             <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
@@ -39,8 +44,10 @@ const SortableCandidate = sortableElement(({value,sortIndex,form}) => <li classN
 const SortableRate = sortableElement(({value,sortIndex,form,colors}) => <li className="sortable">
     <div key={"rowRate"+sortIndex}>
         <div className="input-group mb-3">
-            <div className="input-group-prepend ">
-                <span className="input-group-text indexNumber"  style={ {color:"#ffffff", backgroundColor : colors[sortIndex]} }>{sortIndex+1}</span>
+            <div className="input-group-prepend p-0"  >
+                <ColoredDragHandle >
+                    <div style={ {backgroundColor : colors[sortIndex]} }  className="sortabe-colored-disc">{sortIndex+1}</div>
+                </ColoredDragHandle>
             </div>
             <input type="text"  className="form-control" value={value} onChange={(event) => form.editRate(event,sortIndex)} />
             <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
@@ -352,7 +359,7 @@ class election_form extends Component {
 
                 <div className="row mt-2">
                     <div className="col-12">
-                        <SortableCandidatesContainer items={this.state.candidates} onSortEnd={this.onCandidatesSortEnd} form={this} />
+                        <SortableCandidatesContainer items={this.state.candidates} onSortEnd={this.onCandidatesSortEnd} form={this} useDragHandle />
                     </div>
                 </div>
                 <div className="row mt-2">
@@ -503,7 +510,7 @@ class election_form extends Component {
 
                                     <div className="row mt-2">
                                         <div className="col-12">
-                                            <SortableRatesContainer items={this.state.rates} onSortEnd={this.onRatesSortEnd} form={this} colors={this.state.rateColors}/>
+                                            <SortableRatesContainer items={this.state.rates} onSortEnd={this.onRatesSortEnd} form={this} colors={this.state.rateColors} useDragHandle/>
                                         </div>
                                     </div>
                                     <div className="row mt-2">
