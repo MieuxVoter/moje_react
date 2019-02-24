@@ -32,7 +32,28 @@ class login extends Component {
     }
 
 
-    render() {
+    render(){
+        return (
+            <div className="text-center">
+            <form className="form-signin text-center">
+                <img src="brand.svg" alt="logo" width="80" height="80"/>
+                <h1 className="h3 mb-3 font-weight-normal">Connectez-vous !</h1>
+                <label htmlFor="inputEmail" className="sr-only">Addresse e-mail</label>
+                <input type="email" id="inputEmail" className="form-control" placeholder="Addresse e-mail" required
+                       autoFocus />
+                    <label htmlFor="inputPassword" className="sr-only">Mot de passe</label>
+                    <input type="password" id="inputPassword" className="form-control" placeholder="Mot de passe" required />
+                {/*<div className="checkbox mb-3">
+                            <label>
+                                <input type="checkbox" value="remember-me" /> Se souvenir de moi
+                            </label>
+                        </div>*/}
+                        <button className="btn btn-lg btn-primary btn-block" type="submit">Connexion</button>
+                        <p className="text-center"><a  className="text-secondary" href="/reset_password">Mot de passe oublié ?</a></p>
+                        <p><a href="/sign-up" >Créer un compte</a></p>
+            </form></div>)
+    }
+    renderOld() {
         return (
             <div className="container body">
                 <div className="login-background">

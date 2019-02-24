@@ -1,11 +1,9 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
-
 //import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
 import './styles.css';
-
 
 
 import Dashboard from "./components/dashboard.js"
@@ -20,7 +18,6 @@ import Register from "./components/register.js"
 import ResetPassword from "./components/reset_password.js"
 import NewPassword from "./components/new_password.js"
 import Menu from "./components/menu.js"
-import config from "react-global-configuration";
 
 class App extends React.Component {
 
@@ -48,7 +45,7 @@ class App extends React.Component {
                         </Router>
                     </main>
                     <footer>
-                        <p className="mt-5 text-center"><small>Application MieuxVoter, 2019</small></p>
+                        <p className="mt-5 text-center"><small>Plateforme de vote <b>Mieux Voter</b>, 2019</small></p>
                     </footer>
                 </div>
 
