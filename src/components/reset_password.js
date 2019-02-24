@@ -29,8 +29,26 @@ class reset_password extends Component {
             });
     }
 
+    render(){
+        return (
+            <div className="text-center">
+                <form className="form-short text-center">
+                    <img src="brand.svg" alt="logo" width="80" height="80"/>
+                    <h1 className="h3 mb-3 font-weight-normal">Mot de passe oublié ?</h1>
+                    <p class="small">Veuillez saisir l'adresse e-mail correspondant à votre compte. Nous vous enverrons un e-mail vous permettant de saisir un nouveau mot de passe.</p>
+                    <label htmlFor="inputEmail" className="sr-only">Addresse e-mail</label>
+                    <input type="email" id="inputEmail" className="form-control" placeholder="Addresse e-mail" required
+                           autoFocus />
+                    {/*<div className="checkbox mb-3">
+                            <label>
+                                <input type="checkbox" value="remember-me" /> Se souvenir de moi
+                            </label>
+                        </div>*/}
+                    <button className="mt-3 btn btn-lg btn-primary btn-block" type="submit">Envoyer</button>
+                </form></div>)
+    }
 
-    render() {
+    renderOld() {
         return (
             <div className="container body">
                 <div className="login-background">

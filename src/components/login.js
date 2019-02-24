@@ -35,7 +35,7 @@ class login extends Component {
     render(){
         return (
             <div className="text-center">
-            <form className="form-signin text-center">
+            <form className="form-short text-center">
                 <img src="brand.svg" alt="logo" width="80" height="80"/>
                 <h1 className="h3 mb-3 font-weight-normal">Connectez-vous !</h1>
                 <label htmlFor="inputEmail" className="sr-only">Addresse e-mail</label>
