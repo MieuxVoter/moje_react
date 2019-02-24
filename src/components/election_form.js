@@ -24,34 +24,42 @@ const SortableCandidate = sortableElement(({candidate, sortIndex, form}) => <li 
     <div key={"rowCandidate" + sortIndex}>
         <div className="row">
             <div className="col-12">
-            <div className="input-group ">
-                <div className="input-group-prepend">
-                    <DragHandle>
-                        <span>{sortIndex + 1}</span>
-                    </DragHandle>
+                <div className="input-group ">
+                    <div className="input-group-prepend">
+                        <DragHandle>
+                            <span>{sortIndex + 1}</span>
+                        </DragHandle>
+                    </div>
+                    <input type="text" className="form-control" value={candidate.label}
+                           onChange={(event) => form.editCandidateLabel(event, sortIndex)}
+                           maxLength={config.get("options").max_length_candidate_label}/>
+                    <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
+                        <div key="button"><i className="fas fa-trash-alt"/></div>
+                        <div key="modal-title">Suppression ?</div>
+                        <div key="modal-body">Êtes-vous sûr de vouloir supprimer la
+                            proposition <b>"{candidate.label}"</b> ?
+                        </div>
+                        <div key="modal-confirm" onClick={() => form.removeCandidate(sortIndex)}>Oui</div>
+                        <div key="modal-cancel">Non</div>
+                    </ButtonWithConfirm>
                 </div>
-                <input type="text" className="form-control" value={candidate.label}
-                       onChange={(event) => form.editCandidateLabel(event, sortIndex)}  maxLength={config.get("options").max_length_candidate_label} />
-                <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
-                    <div key="button"><i className="fas fa-trash-alt"/></div>
-                    <div key="modal-title">Suppression ?</div>
-                    <div key="modal-body">Êtes-vous sûr de vouloir supprimer la proposition <b>"{candidate.label}"</b> ?</div>
-                    <div key="modal-confirm" onClick={() => form.removeCandidate(sortIndex)}>Oui</div>
-                    <div key="modal-cancel">Non</div>
-                </ButtonWithConfirm>
-            </div>
             </div>
         </div>
         <div className="row mb-4 mt-1">
-            <div className="col-auto p-0"><div  style={{width:"55px"}} /></div>
-            <div className="col p-0" >
+            <div className="col-auto p-0">
+                <div style={{width: "55px"}}/>
+            </div>
+            <div className="col p-0">
                  <textarea
                      onChange={(event) => form.editCandidatePresentation(event, sortIndex)}
                      className="form-control" rows="4"
-                           placeholder="Présentez ici votre proposition en quelques lignes"
-                           maxLength={config.get("options").max_length_candidate_presentation} value={candidate.presentation} />
+                     placeholder="Présentez ici votre proposition en quelques lignes"
+                     maxLength={config.get("options").max_length_candidate_presentation}
+                     value={candidate.presentation}/>
             </div>
-            <div className="col-auto p-0"><div  style={{width:"15px"}} /></div>
+            <div className="col-auto p-0">
+                <div style={{width: "15px"}}/>
+            </div>
         </div>
     </div>
 </li>);
@@ -67,7 +75,8 @@ const SortableRate = sortableElement(({value, sortIndex, form, colors}) => <li c
                 </ColoredDragHandle>
             </div>
             <input type="text" className="form-control" value={value}
-                   onChange={(event) => form.editRate(event, sortIndex)}  placeholder="Nom de la proposition, nom du candidat, etc..." />
+                   onChange={(event) => form.editRate(event, sortIndex)}
+                   placeholder="Nom de la proposition, nom du candidat, etc..."/>
             <ButtonWithConfirm className="btn btn-outline-danger input-group-append">
                 <div key="button"><i className="fas fa-trash-alt"/></div>
                 <div key="modal-title">Suppression ?</div>
@@ -116,8 +125,8 @@ class election_form extends Component {
             rates: JSON.parse(JSON.stringify(config.get("options.default_rates"))),
             rateColors: [],
             isAddRateOpen: false,
-            isVisibleTipsDragndropCandidate:true,
-            isVisibleTipsDragndropRate:true
+            isVisibleTipsDragndropCandidate: true,
+            isVisibleTipsDragndropRate: true
         };
 
         this.gradientColors = config.get("options.rates_gradient");
@@ -390,15 +399,18 @@ class election_form extends Component {
                                                      form={this} useDragHandle/>
                     </div>
                 </div>
-                {(this.state.candidates.length > 2 && this.state.isVisibleTipsDragndropCandidate===true) ?  <div className="row alert alert-info">
-                    <div className="col pl-0 ">
+                {(this.state.candidates.length > 2 && this.state.isVisibleTipsDragndropCandidate === true) ?
+                    <div className="row alert alert-info">
+                        <div className="col pl-0 ">
 
-                        <i className="fas fa-lightbulb mr-2" /><b>Astuce :</b> Vous pouvez changer l'ordre des propositions par glisser-déposer !
-                    </div>
-                    <div className="col-auto">
-                        <a className="text-info pointer" onClick={this.hideTipsDragndropCandidate}><i className="fas fa-window-close" /></a>
-                    </div>
-                </div>:<div />}
+                            <i className="fas fa-lightbulb mr-2"/><b>Astuce :</b> Vous pouvez changer l'ordre des
+                            propositions par glisser-déposer !
+                        </div>
+                        <div className="col-auto">
+                            <a className="text-info pointer" onClick={this.hideTipsDragndropCandidate}><i
+                                className="fas fa-window-close"/></a>
+                        </div>
+                    </div> : <div/>}
                 <div className="row mt-2">
 
                     <div className="col-12">
@@ -584,8 +596,6 @@ class election_form extends Component {
                                                       onExited={() => {
                                                           this._addRateButton.current.focus()
                                                       }}>
-
-
                                                 <Card>
                                                     <CardHeader>Ajout d'une mention
                                                         ({config.get("options").max_rates} max.)</CardHeader>
@@ -617,22 +627,23 @@ class election_form extends Component {
                                                         </div>
                                                     </CardBody>
                                                 </Card>
-
-
                                             </Collapse>
                                         </div>
 
-                                        {(this.state.rates.length > 2 && this.state.isVisibleTipsDragndropRate===true) ?
+                                        {(this.state.rates.length > 2 && this.state.isVisibleTipsDragndropRate === true) ?
                                             <div className="col-12 pr-4 pl-4">
-                                            <div className="row alert alert-info">
-                                            <div className="col pl-0 ">
-
-                                                <i className="fas fa-lightbulb mr-2" /><b>Astuce :</b> Vous pouvez changer l'ordre des mentions par glisser-déposer !
-                                            </div>
-                                            <div className="col-auto">
-                                                <a className="text-info pointer" onClick={this.hideTipsDragndropRate}><i className="fas fa-window-close" /></a>
-                                            </div>
-                                            </div></div>:<div />}
+                                                <div className="row alert alert-info">
+                                                    <div className="col pl-0 ">
+                                                        <i className="fas fa-lightbulb mr-2"/><b>Astuce :</b> Vous
+                                                        pouvez changer l'ordre des mentions par glisser-déposer !
+                                                    </div>
+                                                    <div className="col-auto">
+                                                        <a className="text-info pointer"
+                                                           onClick={this.hideTipsDragndropRate}><i
+                                                            className="fas fa-window-close"/></a>
+                                                    </div>
+                                                </div>
+                                            </div> : <div/>}
 
                                         <div className="col-12">
                                             {this.state.isAddRateOpen ? null :
