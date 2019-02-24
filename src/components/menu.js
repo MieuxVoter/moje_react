@@ -1,18 +1,6 @@
 import React, {Component} from "react";
 import {Link, NavLink} from "react-router-dom";
-import {
-    Collapse,
-    Container,
-    Button,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem } from 'reactstrap';
+import {Collapse, Container, Nav, Navbar, NavbarToggler, NavItem} from 'reactstrap';
 
 class Menu extends Component {
     constructor(props) {
@@ -57,19 +45,22 @@ class Menu extends Component {
                             {localStorage.getItem('username') ? (
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
-                                        <NavLink to={`/dashboard`} className="btn btn-link text-secondary" >Tableau de bord</NavLink>
+                                        <NavLink to={`/dashboard`} className="btn btn-link text-primary" ><i className="fas fa-list-alt mr-2" />Tableau de bord</NavLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavLink to={`/`} className="btn btn-link text-secondary" >Nouveau scrutin</NavLink>
+                                        <NavLink to={`/`} className="btn btn-link text-primary" ><i className="fas fa-gavel mr-2" />Nouveau scrutin</NavLink>
                                     </NavItem>
                                     <NavItem>
-                                        <NavLink  onClick={this.user_disconnect} className="btn btn-link text-secondary" >Déconnexion</NavLink>
+                                        <a  onClick={this.user_disconnect} className="btn btn-link text-primary" ><i className="fas fa-unlock mr-2" />Déconnexion</a>
                                     </NavItem>
                                 </Nav>
                             ) : (
                                 <Nav className="ml-auto" navbar>
                                     <NavItem>
-                                        <NavLink to={`/log-in`} className="btn btn-link text-primary"><i className="fas fa-user-circle mr-2"></i>Connexion</NavLink>
+                                        <NavLink to={`/log-in`} className="btn btn-link text-primary"><i className="fas fa-user-circle mr-2" />Créer un compte</NavLink>
+                                    </NavItem>
+                                    <NavItem>
+                                        <NavLink to={`/log-in`} className="btn btn-link text-primary"><i className="fas fa-lock mr-2" />Connexion</NavLink>
                                     </NavItem>
                                 </Nav>
                             )}
