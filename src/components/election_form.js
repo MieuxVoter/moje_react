@@ -357,7 +357,7 @@ class election_form extends Component {
                 <ToastContainer/>
                 <div className="row">
                     <div className="col-12">
-                        <h1>Nouveau Scrutin</h1>
+                        <h1 class="text-primary">Nouveau Scrutin</h1>
                         <hr/>
                     </div>
                 </div>
@@ -404,7 +404,7 @@ class election_form extends Component {
                         <div className="col pl-0 ">
 
                             <i className="fas fa-lightbulb mr-2"/><b>Astuce :</b> Vous pouvez changer l'ordre des
-                            propositions par glisser-déposer !
+                            propositions par glisser-déposer du numéro !
                         </div>
                         <div className="col-auto">
                             <a className="text-info pointer" onClick={this.hideTipsDragndropCandidate}><i
@@ -635,7 +635,7 @@ class election_form extends Component {
                                                 <div className="row alert alert-info">
                                                     <div className="col pl-0 ">
                                                         <i className="fas fa-lightbulb mr-2"/><b>Astuce :</b> Vous
-                                                        pouvez changer l'ordre des mentions par glisser-déposer !
+                                                        pouvez changer l'ordre des mentions par glisser-déposer du numéro !
                                                     </div>
                                                     <div className="col-auto">
                                                         <a className="text-info pointer"

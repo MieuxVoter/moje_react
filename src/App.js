@@ -2,7 +2,7 @@ import React from 'react';
 import {BrowserRouter as Router, Route} from "react-router-dom";
 //import './App.css';
 //import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import './bootstrap.scss'
+import './custom_colors.scss'
 import '../node_modules/@fortawesome/fontawesome-free/css/all.css';
 import './styles.css';
 

@@ -1,0 +1,17 @@
+$primary:#2943a0;
+$danger:#f1455b;
+$warning:#ff9c00;
+$info:#a3b5f7;
+$success: #299b12;
+
+
+$theme-colors: (
+        "primary": $primary,
+        "danger": $danger,
+        "warning": $warning,
+        "info": $info,
+        "success":$success
+);
+
+@import "~bootstrap/scss/bootstrap.scss";
+@import "./switch.scss";
