@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import config from 'react-global-configuration';
+import PasswordInput from "./formComponents/PasswordInput";
 
 class register extends Component {
 
@@ -32,8 +33,80 @@ class register extends Component {
             });
     }
 
+    render(){
+        return(
+            <div className="container">
+                <div className="row">
+                    <div className="col-12">
+                        <h1 className="text-primary">Créer un compte</h1>
+                        <hr/>
+                    </div>
+                </div>
 
-    render() {
+                <div className="row mt-3">
+                    <div className="col-12">
+                        <label htmlFor="username"><b>Votre nom</b> <span
+                            className="text-muted">(obligatoire)</span></label>
+                        <input type="text" name="name" id="username"
+                               required="required" className="form-control" maxLength="250" autoFocus tabIndex="1"
+                               placeholder="Votre nom, prénom ou pseudonyme ..."/>
+                    </div>
+                </div>
+
+                <div className="row mt-3">
+                    <div className="col-12">
+                        <label htmlFor="email"><b>Votre adresse e-mail</b> <span
+                            className="text-muted">(obligatoire)</span></label>
+                        <input type="text" name="name" id="email"
+                               required="required" className="form-control" maxLength="250"  tabIndex="2"
+                               placeholder="Votre adresse e-mail"/>
+                               <span className="text-muted">Attention ! Un lien permettant de finaliser la création de votre compte sera envoyé à cette adresse.</span>
+                    </div>
+                </div>
+
+                <div className="row mt-3">
+                    <div className="col-12">
+                        <label htmlFor="password"><b>Votre mot de passe</b> <span
+                            className="text-muted">(obligatoire)</span></label>
+                        <PasswordInput name="password" id="password"
+                                       backgroundColor="#bbb"
+                               required="required" className="form-control" minLength="8" maxLength="50"  tabIndex="3"
+                               placeholder="Votre mot de passe"/>
+                        <span className="text-muted">Saisir 8 caractères minimum avec au moins une lettre et un chiffre</span>
+                    </div>
+                </div>
+
+                <div className="row mt-3">
+                    <div className="col-12">
+                        <label htmlFor="password"><b>Confirmation du mot de passe</b> <span
+                            className="text-muted">(obligatoire)</span></label>
+                        <input type="password" name="confirm_password" id="confirm_password"
+                               required="required" className="form-control" maxLength="50"  tabIndex="3"
+                               placeholder="Votre mot de passe"/>
+                        <span className="text-muted">Re-saisir votre mot de passe à l'identique.</span>
+                    </div>
+                </div>
+
+                <div className="row mt-5">
+
+                    <div className="col-12 text-right">
+                        <hr/>
+
+                        <button type="button" tabIndex="7" className="btn btn-success btn-lg"
+                               ><i
+                            className="fas fa-check mr-2"/>Créer <span
+                            className="d-none d-md-inline">mon compte</span>
+                        </button>
+
+                    </div>
+                </div>
+
+
+            </div>
+        )
+    }
+
+    renderOld() {
         return (
             <div className="container body">
                 <div className="login-background">
