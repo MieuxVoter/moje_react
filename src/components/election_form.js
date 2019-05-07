@@ -136,7 +136,7 @@ class election_form extends Component {
 
 
     is_authenticated() {
-        if (localStorage.getItem('username') === null && localStorage.getItem('password') === null) {
+        /*if (localStorage.getItem('username') === null && localStorage.getItem('password') === null) {
             fetch(config.get('server_url') + 'ws/data/log-in/', {
                 method: 'POST',
                 body: {
@@ -149,7 +149,7 @@ class election_form extends Component {
                         window.location.assign('/log-in');
                     }
                 });
-        }
+        }*/
     }
 
 

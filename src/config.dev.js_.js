@@ -18,12 +18,15 @@ config.set({
             "#9b9897"
         ], //ajouter le nombre de couleurs correspondant au max_rates
         default_rates: [
-            {position: 0, value: "Excellent"},
-            {position: 1, value: "Bien"},
-            {position: 2, value: "Passable"},
-            {position: 3, value: "Insuffisant"},
-            {position: 4, value: "A rejeter"}
-        ]
+            "Excellent",
+            "Bien",
+            "Passable",
+            "Insuffisant",
+            "A rejeter"
+        ],
+        max_length_candidate_label:250,
+        max_length_candidate_presentation:1000,
+        max_length_rate_label:100
     }
 });
 

@@ -24,12 +24,13 @@ class App extends React.Component {
 
     render() {
         return (
+            <Router>
                 <div>
                     <header>
                         <Menu/>
                     </header>
                     <main className="pt-5">
-                        <Router>
+
                             <div>
                                 <Route path="/dashboard" component={Dashboard}/>
                                 <Route path="/log-in" component={Login}/>
@@ -43,12 +44,13 @@ class App extends React.Component {
                                 <Route path="/election_result"   component={ElectionResult}/>
                                 <Route path="/help"   component={Help}/>
                             </div>
-                        </Router>
+
                     </main>
                     <footer>
                         <p className="mt-5 text-center"><small>Plateforme de vote <b>Mieux Voter</b>, 2019</small></p>
                     </footer>
                 </div>
+            </Router>
 
         )
     }
